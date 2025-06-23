@@ -64,7 +64,7 @@ export default function Page() {
     setRecords((prev) => prev.filter((r) => r.id !== id))
   }
 
-  const chartData = useMemo(() => {
+  const profitChartData = useMemo(() => {
     const map = new Map<string, number>()
     records.forEach((r) => {
       const key = format(new Date(r.date), "yyyy-MM")
@@ -182,7 +182,7 @@ export default function Page() {
           </div>
           <Card className="mt-6 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">キャッシュフロー</h2>
+              <h2 className="text-lg font-semibold">純利益</h2>
               <div className="flex gap-2">
                 <Button size="sm" variant="ghost">
                   先月
@@ -195,7 +195,7 @@ export default function Page() {
                 </Button>
               </div>
             </div>
-            <StatsChart data={chartData} />
+            <StatsChart data={profitChartData} />
           </Card>
           <div className="mt-6">
             <RecordsTable
