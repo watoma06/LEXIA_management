@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { MoreHorizontal, ChevronUp, ChevronDown } from "lucide-react"
 import { useState, useMemo } from "react"
 
@@ -75,9 +76,11 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
     onUpdate?.(updated)
   }
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
+    <>
+      <div className="hidden sm:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
           <TableHead onClick={() => handleSort("category")}
             className="cursor-pointer select-none">
             カテゴリ
@@ -253,6 +256,70 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
           </TableRow>
         ))}
       </TableBody>
-    </Table>
+        </Table>
+      </div>
+      <div className="space-y-4 sm:hidden">
+        {sortedRecords.map((record) => (
+          <Card key={record.id} className="p-4 space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">カテゴリ</span>
+              <span>{record.category === "Income" ? "収入" : "支出"}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">勘定科目</span>
+              <span>{record.type}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">日付</span>
+              <span>{record.date}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">金額</span>
+              <span
+                className={
+                  record.category === "Expense" || record.category === "支出"
+                    ? "text-red-500"
+                    : "text-green-500"
+                }
+              >
+                {record.amount.toLocaleString()}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">相手先／クライアント</span>
+              <span>{record.client}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">品目</span>
+              <span>{record.item}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-muted-foreground">備考</span>
+              <span>{record.note}</span>
+            </div>
+            <div className="text-right">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="icon" variant="ghost">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => onEdit?.(record)}>
+                    編集
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => onDelete?.(record.id)}
+                    className="text-destructive"
+                  >
+                    削除
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </>
   )
 }
