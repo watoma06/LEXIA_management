@@ -4,44 +4,44 @@ import { useEffect, useState } from "react"
 import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
 import { EditRecordDialog } from "@/components/edit-record-dialog"
+import { supabase } from "@/lib/supabase"
 
 export default function RecordsPage() {
   const [records, setRecords] = useState<RecordItem[]>([])
   const [editing, setEditing] = useState<RecordItem | null>(null)
 
   useEffect(() => {
-    fetch("/api/records")
-      .then((res) => res.json())
-      .then(setRecords)
+    supabase
+      .from("records")
+      .select("*")
+      .then(({ data }) => setRecords(data ?? []))
       .catch(() => setRecords([]))
   }, [])
 
   const handleAdd = async (record: NewRecord) => {
-    const res = await fetch("/api/records", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(record),
-    })
-    const data: RecordItem = await res.json()
-    setRecords((prev) => [...prev, data])
+    const { data } = await supabase
+      .from("records")
+      .insert(record)
+      .select()
+      .single()
+    if (data) setRecords((prev) => [...prev, data as RecordItem])
   }
 
   const handleUpdate = async (updated: RecordItem) => {
-    const res = await fetch("/api/records", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updated),
-    })
-    const data: RecordItem = await res.json()
-    setRecords((prev) => prev.map((r) => (r.id === data.id ? data : r)))
+    const { data } = await supabase
+      .from("records")
+      .update(updated)
+      .eq("id", updated.id)
+      .select()
+      .single()
+    if (data)
+      setRecords((prev) =>
+        prev.map((r) => (r.id === (data as RecordItem).id ? (data as RecordItem) : r))
+      )
   }
 
   const handleDelete = async (id: number) => {
-    await fetch("/api/records", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    })
+    await supabase.from("records").delete().eq("id", id)
     setRecords((prev) => prev.filter((r) => r.id !== id))
   }
 

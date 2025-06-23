@@ -27,3 +27,9 @@ Continue building your app on:
 2. Deploy your chats from the v0 interface
 3. Changes are automatically pushed to this repository
 4. Vercel deploys the latest version from this repository
+
+## Supabase Configuration
+
+This project now stores records in Supabase. Create a `.env.local` file based on
+`.env.example` and provide your `NEXT_PUBLIC_SUPABASE_URL` and
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` values.
