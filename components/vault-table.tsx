@@ -8,7 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal } from "lucide-react"
+import { MoreHorizontal, ChevronUp, ChevronDown } from "lucide-react"
+import { useState, useMemo } from "react"
 
 export type RecordItem = {
   id: number
@@ -29,6 +30,33 @@ interface RecordsTableProps {
 }
 
 export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTableProps) {
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof RecordItem
+    direction: "asc" | "desc"
+  } | null>(null)
+
+  const sortedRecords = useMemo(() => {
+    if (!sortConfig) return records
+    const sorted = [...records].sort((a, b) => {
+      const aVal = a[sortConfig.key]
+      const bVal = b[sortConfig.key]
+      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1
+      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1
+      return 0
+    })
+    return sorted
+  }, [records, sortConfig])
+
+  const handleSort = (key: keyof RecordItem) => {
+    setSortConfig((prev) => {
+      if (!prev || prev.key !== key)
+        return { key, direction: "asc" }
+      return {
+        key,
+        direction: prev.direction === "asc" ? "desc" : "asc",
+      }
+    })
+  }
   const handleBlur = (
     id: number,
     key: keyof RecordItem,
@@ -50,18 +78,88 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>カテゴリ</TableHead>
-          <TableHead>勘定科目</TableHead>
-          <TableHead>日付</TableHead>
-          <TableHead>金額</TableHead>
-          <TableHead>相手先／クライアント</TableHead>
-          <TableHead>品目</TableHead>
-          <TableHead>備考</TableHead>
+          <TableHead onClick={() => handleSort("category")}
+            className="cursor-pointer select-none">
+            カテゴリ
+            {sortConfig?.key === "category" && (
+              sortConfig.direction === "asc" ? (
+                <ChevronUp className="inline h-3 w-3" />
+              ) : (
+                <ChevronDown className="inline h-3 w-3" />
+              )
+            )}
+          </TableHead>
+          <TableHead onClick={() => handleSort("type")}
+            className="cursor-pointer select-none">
+            勘定科目
+            {sortConfig?.key === "type" && (
+              sortConfig.direction === "asc" ? (
+                <ChevronUp className="inline h-3 w-3" />
+              ) : (
+                <ChevronDown className="inline h-3 w-3" />
+              )
+            )}
+          </TableHead>
+          <TableHead onClick={() => handleSort("date")}
+            className="cursor-pointer select-none">
+            日付
+            {sortConfig?.key === "date" && (
+              sortConfig.direction === "asc" ? (
+                <ChevronUp className="inline h-3 w-3" />
+              ) : (
+                <ChevronDown className="inline h-3 w-3" />
+              )
+            )}
+          </TableHead>
+          <TableHead onClick={() => handleSort("amount")}
+            className="cursor-pointer select-none">
+            金額
+            {sortConfig?.key === "amount" && (
+              sortConfig.direction === "asc" ? (
+                <ChevronUp className="inline h-3 w-3" />
+              ) : (
+                <ChevronDown className="inline h-3 w-3" />
+              )
+            )}
+          </TableHead>
+          <TableHead onClick={() => handleSort("client")}
+            className="cursor-pointer select-none">
+            相手先／クライアント
+            {sortConfig?.key === "client" && (
+              sortConfig.direction === "asc" ? (
+                <ChevronUp className="inline h-3 w-3" />
+              ) : (
+                <ChevronDown className="inline h-3 w-3" />
+              )
+            )}
+          </TableHead>
+          <TableHead onClick={() => handleSort("item")}
+            className="cursor-pointer select-none">
+            品目
+            {sortConfig?.key === "item" && (
+              sortConfig.direction === "asc" ? (
+                <ChevronUp className="inline h-3 w-3" />
+              ) : (
+                <ChevronDown className="inline h-3 w-3" />
+              )
+            )}
+          </TableHead>
+          <TableHead onClick={() => handleSort("note")}
+            className="cursor-pointer select-none">
+            備考
+            {sortConfig?.key === "note" && (
+              sortConfig.direction === "asc" ? (
+                <ChevronUp className="inline h-3 w-3" />
+              ) : (
+                <ChevronDown className="inline h-3 w-3" />
+              )
+            )}
+          </TableHead>
           <TableHead className="w-0" />
         </TableRow>
       </TableHeader>
       <TableBody>
-        {records.map((record) => (
+        {sortedRecords.map((record) => (
           <TableRow key={record.id}>
             <TableCell
               contentEditable
