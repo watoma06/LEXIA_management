@@ -2,91 +2,91 @@ import { Avatar } from "@/components/ui/avatar"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { MoreHorizontal } from "lucide-react"
 
-const vaults = [
+const records = [
   {
-    name: "Bitcoin",
-    symbol: "BTC",
-    price: "$13,643.21",
-    daily: "+$213.8",
-    balance: "$13,954.04",
-    apy: "8.56%",
-    state: "Fixed",
-    startDate: "05.10.2023",
-    liquidity: "high",
+    category: "Sales",
+    symbol: "SAL",
+    amount: "$13,643.21",
+    today: "+$213.8",
+    total: "$13,954.04",
+    change: "+8.5%",
+    type: "Income",
+    date: "05.10.2023",
+    priority: "high",
   },
   {
-    name: "USDT",
-    symbol: "USDT",
-    price: "$1.00",
-    daily: "+$45.1",
-    balance: "$3,954.04",
-    apy: "5.44%",
-    state: "Fixed",
-    startDate: "12.03.2023",
-    liquidity: "medium",
+    category: "Office Supplies",
+    symbol: "OFF",
+    amount: "$1,200.00",
+    today: "-$45.1",
+    total: "$3,954.04",
+    change: "-5.4%",
+    type: "Expense",
+    date: "12.03.2023",
+    priority: "medium",
   },
   {
-    name: "Ethereum",
-    symbol: "ETH",
-    price: "$2,123.87",
-    daily: "+$13.5",
-    balance: "$3,954.04",
-    apy: "4.12%",
-    state: "Flexible",
-    startDate: "21.01.2023",
-    liquidity: "low",
+    category: "Consulting",
+    symbol: "CON",
+    amount: "$2,123.87",
+    today: "+$13.5",
+    total: "$3,954.04",
+    change: "+4.1%",
+    type: "Income",
+    date: "21.01.2023",
+    priority: "low",
   },
 ]
 
-export function VaultTable() {
+export function RecordsTable() {
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Vault</TableHead>
-          <TableHead>Daily</TableHead>
-          <TableHead>Balance ↓</TableHead>
-          <TableHead>APY ↓</TableHead>
-          <TableHead>State</TableHead>
-          <TableHead>Start date</TableHead>
-          <TableHead>Liquidity</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead>Today</TableHead>
+          <TableHead>Amount ↓</TableHead>
+          <TableHead>Change ↓</TableHead>
+          <TableHead>Type</TableHead>
+          <TableHead>Date</TableHead>
+          <TableHead>Priority</TableHead>
           <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {vaults.map((vault) => (
-          <TableRow key={vault.symbol}>
+        {records.map((record) => (
+          <TableRow key={record.symbol}>
             <TableCell className="font-medium">
               <div className="flex items-center gap-2">
                 <Avatar className="h-6 w-6">
-                  <img src={`/placeholder.svg?height=24&width=24`} alt={vault.name} />
+                  <img src={`/placeholder.svg?height=24&width=24`} alt={record.category} />
                 </Avatar>
                 <div>
-                  <div className="font-medium">{vault.name}</div>
-                  <div className="text-xs text-muted-foreground">{vault.price}</div>
+                  <div className="font-medium">{record.category}</div>
+                  <div className="text-xs text-muted-foreground">{record.amount}</div>
                 </div>
               </div>
             </TableCell>
-            <TableCell className="text-green-500">{vault.daily}</TableCell>
-            <TableCell>{vault.balance}</TableCell>
-            <TableCell>{vault.apy}</TableCell>
+            <TableCell className="text-green-500">{record.today}</TableCell>
+            <TableCell>{record.total}</TableCell>
+            <TableCell>{record.change}</TableCell>
             <TableCell>
               <span
                 className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${
-                  vault.state === "Fixed" ? "bg-yellow-500/10 text-yellow-500" : "bg-green-500/10 text-green-500"
+                  record.type === "Income" ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"
                 }`}
               >
-                {vault.state}
+                {record.type}
               </span>
             </TableCell>
-            <TableCell>{vault.startDate}</TableCell>
+            <TableCell>{record.date}</TableCell>
             <TableCell>
               <div className="flex gap-1">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <div
                     key={i}
                     className={`h-1.5 w-3 rounded-full ${
-                      i < (vault.liquidity === "high" ? 3 : vault.liquidity === "medium" ? 2 : 1)
+                      i < (record.priority === "high" ? 3 : record.priority === "medium" ? 2 : 1)
                         ? "bg-primary"
                         : "bg-muted"
                     }`}
