@@ -198,7 +198,11 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
               onBlur={(e) =>
                 handleBlur(record.id, "amount", e.currentTarget.textContent || "")
               }
-              className={record.category === "Expense" ? "text-red-500" : "text-green-500"}
+              className={
+                record.category === "Expense" || record.category === "支出"
+                  ? "text-red-500"
+                  : "text-green-500"
+              }
             >
               {record.amount.toLocaleString()}
             </TableCell>
