@@ -76,6 +76,18 @@ export default function Page() {
       .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
   }, [records])
 
+  const totals = useMemo(() => {
+    return records.reduce(
+      (acc, r) => {
+        if (r.category === "Income") acc.income += r.amount
+        else acc.expense += r.amount
+        acc.profit = acc.income - acc.expense
+        return acc
+      },
+      { income: 0, expense: 0, profit: 0 }
+    )
+  }, [records])
+
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="flex items-center h-16 gap-2 border-b px-4 lg:hidden">
@@ -157,18 +169,15 @@ export default function Page() {
           <div className="grid gap-4 md:grid-cols-3">
             <MetricsCard
               title="総収入"
-              value="¥74,892"
-              change={{ value: "¥1,340", percentage: "+2.1%", isPositive: true }}
+              value={`¥${totals.income.toLocaleString()}`}
             />
             <MetricsCard
               title="総支出"
-              value="¥54,892"
-              change={{ value: "¥1,340", percentage: "-1.3%", isPositive: false }}
+              value={`¥${totals.expense.toLocaleString()}`}
             />
             <MetricsCard
               title="純利益"
-              value="¥20,000"
-              change={{ value: "¥1,340", percentage: "+1.2%", isPositive: true }}
+              value={`¥${totals.profit.toLocaleString()}`}
             />
           </div>
           <Card className="mt-6 p-6">

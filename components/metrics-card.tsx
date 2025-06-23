@@ -5,7 +5,7 @@ import type React from "react" // Added import for React
 interface MetricsCardProps {
   title: string
   value: string
-  change: {
+  change?: {
     value: string
     percentage: string
     isPositive: boolean
@@ -23,12 +23,19 @@ export function MetricsCard({ title, value, change, chart }: MetricsCardProps) {
       <div className="flex items-end justify-between">
         <div>
           <p className="text-2xl font-bold">{value}</p>
-          <div className="flex items-center gap-1 mt-1">
-            <span className="text-sm">+{change.value}</span>
-            <span className={`text-sm ${change.isPositive ? "text-green-500" : "text-red-500"}`}>
-              {change.percentage}
-            </span>
-          </div>
+          {change && (
+            <div className="flex items-center gap-1 mt-1">
+              <span className="text-sm">
+                {change.isPositive ? "+" : "-"}
+                {change.value}
+              </span>
+              <span
+                className={`text-sm ${change.isPositive ? "text-green-500" : "text-red-500"}`}
+              >
+                {change.percentage}
+              </span>
+            </div>
+          )}
         </div>
         {chart}
       </div>
