@@ -105,7 +105,8 @@ export function AddRecordDialog({ onAdd }: AddRecordDialogProps) {
           <label className="text-sm">備考</label>
           <Textarea value={form.note} onChange={(e) => handleChange("note", e.target.value)} />
         </div>
-        <DialogFooter>
+        <DialogFooter className="flex gap-2">
+          <Button variant="outline">インポート</Button>
           <Button onClick={handleSubmit}>完了</Button>
         </DialogFooter>
       </DialogContent>
