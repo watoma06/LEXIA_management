@@ -19,7 +19,6 @@ import {
   Globe,
   Home,
   LayoutDashboard,
-  LifeBuoy,
   Settings,
   Wallet,
 } from "lucide-react"
@@ -143,10 +142,6 @@ export default function Page() {
               <Wallet className="h-4 w-4" />
               アカウント
               <ChevronDown className="ml-auto h-4 w-4" />
-            </Button>
-            <Button variant="ghost" className="w-full justify-start gap-2">
-              <LifeBuoy className="h-4 w-4" />
-              サポート
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <Settings className="h-4 w-4" />
