@@ -2,22 +2,16 @@
 
 import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts"
 
-const data = [
-  { date: "3月", value: 300 },
-  { date: "4月", value: 350 },
-  { date: "5月", value: 200 },
-  { date: "6月", value: 400 },
-  { date: "7月", value: 300 },
-  { date: "8月", value: 200 },
-  { date: "9月", value: 450 },
-  { date: "10月", value: 500 },
-  { date: "11月", value: 480 },
-  { date: "12月", value: 400 },
-  { date: "1月", value: 350 },
-  { date: "2月", value: 400 },
-]
+export interface ChartDataItem {
+  date: string
+  value: number
+}
 
-export function StatsChart() {
+interface StatsChartProps {
+  data: ChartDataItem[]
+}
+
+export function StatsChart({ data }: StatsChartProps) {
   return (
     <div className="h-[300px] w-full">
       <ResponsiveContainer width="100%" height="100%">
