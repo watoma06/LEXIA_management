@@ -79,9 +79,13 @@ export default function Page() {
       const value = r.category === "Income" ? r.amount : -r.amount
       map.set(key, (map.get(key) || 0) + value)
     })
+    let cumulative = 0
     return Array.from(map.entries())
       .sort(([a], [b]) => (a > b ? 1 : -1))
-      .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
+      .map(([k, v]) => {
+        cumulative += v
+        return { date: format(new Date(k + "-01"), "M月"), value: cumulative }
+      })
   }, [records])
 
   const totals = useMemo(() => {
@@ -190,7 +194,7 @@ export default function Page() {
           </div>
           <Card className="mt-6 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">純利益</h2>
+              <h2 className="text-lg font-semibold">累計純利益</h2>
               <div className="flex gap-2">
                 <Button size="sm" variant="ghost">
                   先月
