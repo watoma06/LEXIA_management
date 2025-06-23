@@ -17,7 +17,7 @@ const COLORS = [
 
 export function CategoryChart({ data }: { data: CategoryData[] }) {
   return (
-    <div className="h-[300px] w-full">
+    <div className="h-[300px] w-full max-w-full min-w-0 overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
