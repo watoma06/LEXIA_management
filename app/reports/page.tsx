@@ -80,7 +80,7 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
+    <div className="min-h-screen bg-background text-foreground p-6">
       <h1 className="text-2xl font-bold mb-6">レポート</h1>
       <div className="grid gap-4 md:grid-cols-2 mb-6">
         <div className="grid gap-2">
