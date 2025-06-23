@@ -202,6 +202,7 @@ export default function Page() {
               records={records}
               onEdit={(r) => setEditing(r)}
               onDelete={handleDelete}
+              onUpdate={handleUpdate}
             />
           </div>
           {editing && (

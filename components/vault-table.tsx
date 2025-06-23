@@ -25,9 +25,27 @@ interface RecordsTableProps {
   records: RecordItem[]
   onEdit?: (record: RecordItem) => void
   onDelete?: (id: number) => void
+  onUpdate?: (record: RecordItem) => void
 }
 
-export function RecordsTable({ records, onEdit, onDelete }: RecordsTableProps) {
+export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTableProps) {
+  const handleBlur = (
+    id: number,
+    key: keyof RecordItem,
+    value: string
+  ) => {
+    const record = records.find((r) => r.id === id)
+    if (!record) return
+    let newValue: any = value.trim()
+    if (key === "amount") {
+      newValue = Number(newValue.replace(/,/g, ""))
+    }
+    if (key === "category") {
+      newValue = newValue === "収入" ? "Income" : newValue === "支出" ? "Expense" : newValue
+    }
+    const updated = { ...record, [key]: newValue } as RecordItem
+    onUpdate?.(updated)
+  }
   return (
     <Table>
       <TableHeader>
@@ -45,13 +63,73 @@ export function RecordsTable({ records, onEdit, onDelete }: RecordsTableProps) {
       <TableBody>
         {records.map((record) => (
           <TableRow key={record.id}>
-            <TableCell>{record.category === "Income" ? "収入" : "支出"}</TableCell>
-            <TableCell>{record.type}</TableCell>
-            <TableCell>{record.date}</TableCell>
-            <TableCell>{record.amount.toLocaleString()}</TableCell>
-            <TableCell>{record.client}</TableCell>
-            <TableCell>{record.item}</TableCell>
-            <TableCell>{record.note}</TableCell>
+            <TableCell
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                handleBlur(
+                  record.id,
+                  "category",
+                  e.currentTarget.textContent || ""
+                )
+              }
+            >
+              {record.category === "Income" ? "収入" : "支出"}
+            </TableCell>
+            <TableCell
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                handleBlur(record.id, "type", e.currentTarget.textContent || "")
+              }
+            >
+              {record.type}
+            </TableCell>
+            <TableCell
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                handleBlur(record.id, "date", e.currentTarget.textContent || "")
+              }
+            >
+              {record.date}
+            </TableCell>
+            <TableCell
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                handleBlur(record.id, "amount", e.currentTarget.textContent || "")
+              }
+            >
+              {record.amount.toLocaleString()}
+            </TableCell>
+            <TableCell
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                handleBlur(record.id, "client", e.currentTarget.textContent || "")
+              }
+            >
+              {record.client}
+            </TableCell>
+            <TableCell
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                handleBlur(record.id, "item", e.currentTarget.textContent || "")
+              }
+            >
+              {record.item}
+            </TableCell>
+            <TableCell
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) =>
+                handleBlur(record.id, "note", e.currentTarget.textContent || "")
+              }
+            >
+              {record.note}
+            </TableCell>
             <TableCell className="text-right">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

@@ -55,6 +55,7 @@ export default function RecordsPage() {
         records={records}
         onEdit={(r) => setEditing(r)}
         onDelete={handleDelete}
+        onUpdate={handleUpdate}
       />
       {editing && (
         <EditRecordDialog
