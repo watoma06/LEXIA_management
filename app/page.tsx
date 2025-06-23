@@ -69,7 +69,19 @@ export default function Page() {
           <div className="mb-6 flex items-center justify-between">
             <div className="space-y-1">
               <h1 className="text-2xl font-bold">財務概要</h1>
-              <div className="text-sm text-muted-foreground">2023年8月13日 - 2023年8月18日</div>
+              <div className="text-sm text-muted-foreground">
+                {new Date('2025-01-01').toLocaleDateString('ja-JP', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}{' '}
+                -{' '}
+                {new Date().toLocaleDateString('ja-JP', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </div>
             </div>
             <Button variant="outline" className="gap-2">
               会計期間
@@ -79,18 +91,18 @@ export default function Page() {
           <div className="grid gap-4 md:grid-cols-3">
             <MetricsCard
               title="総収入"
-              value="$74,892"
-              change={{ value: "$1,340", percentage: "+2.1%", isPositive: true }}
+              value="¥74,892"
+              change={{ value: "¥1,340", percentage: "+2.1%", isPositive: true }}
             />
             <MetricsCard
               title="総支出"
-              value="$54,892"
-              change={{ value: "$1,340", percentage: "-1.3%", isPositive: false }}
+              value="¥54,892"
+              change={{ value: "¥1,340", percentage: "-1.3%", isPositive: false }}
             />
             <MetricsCard
               title="純利益"
-              value="$20,000"
-              change={{ value: "$1,340", percentage: "+1.2%", isPositive: true }}
+              value="¥20,000"
+              change={{ value: "¥1,340", percentage: "+1.2%", isPositive: true }}
             />
           </div>
           <Card className="mt-6 p-6">
