@@ -1,10 +1,15 @@
+"use client"
+
+import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { MetricsCard } from "@/components/metrics-card"
 import { StatsChart } from "@/components/stats-chart"
-import { RecordsTable } from "@/components/vault-table"
+import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { MobileNav } from "@/components/mobile-nav"
+import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
+import { format } from "date-fns"
 import {
   BarChart3,
   ChevronDown,
@@ -17,6 +22,48 @@ import {
 } from "lucide-react"
 
 export default function Page() {
+  const [records, setRecords] = useState<RecordItem[]>([
+    {
+      id: 1,
+      category: "Income",
+      type: "制作費",
+      date: "2024-05-10",
+      amount: 13643,
+      client: "顧客A",
+      item: "Web制作",
+      note: "初期契約",
+    },
+    {
+      id: 2,
+      category: "Expense",
+      type: "維持費",
+      date: "2024-05-12",
+      amount: 1200,
+      client: "事務用品店",
+      item: "文房具",
+      note: "",
+    },
+  ])
+
+  const handleAdd = (record: NewRecord) => {
+    setRecords((prev) => [
+      ...prev,
+      { id: prev.length + 1, ...record },
+    ])
+  }
+
+  const chartData = useMemo(() => {
+    const map = new Map<string, number>()
+    records.forEach((r) => {
+      const key = format(new Date(r.date), "yyyy-MM")
+      const value = r.category === "Income" ? r.amount : -r.amount
+      map.set(key, (map.get(key) || 0) + value)
+    })
+    return Array.from(map.entries())
+      .sort(([a], [b]) => (a > b ? 1 : -1))
+      .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
+  }, [records])
+
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="flex items-center h-16 gap-2 border-b px-4 lg:hidden">
@@ -83,10 +130,13 @@ export default function Page() {
                 })}
               </div>
             </div>
-            <Button variant="outline" className="gap-2">
-              会計期間
-              <ChevronDown className="h-4 w-4" />
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" className="gap-2">
+                会計期間
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+              <AddRecordDialog onAdd={handleAdd} />
+            </div>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             <MetricsCard
@@ -126,10 +176,10 @@ export default function Page() {
                 </Button>
               </div>
             </div>
-            <StatsChart />
+            <StatsChart data={chartData} />
           </Card>
           <div className="mt-6">
-            <RecordsTable />
+            <RecordsTable records={records} />
           </div>
         </main>
       </div>
