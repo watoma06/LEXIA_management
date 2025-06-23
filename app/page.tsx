@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { MetricsCard } from "@/components/metrics-card"
 import { StatsChart } from "@/components/stats-chart"
-import { VaultTable } from "@/components/vault-table"
+import { RecordsTable } from "@/components/vault-table"
 import { BarChart3, ChevronDown, Globe, Home, LayoutDashboard, LifeBuoy, Settings, Wallet } from "lucide-react"
 
 export default function Page() {
@@ -13,7 +13,7 @@ export default function Page() {
         <aside className="border-r bg-background/50 backdrop-blur">
           <div className="flex h-16 items-center gap-2 border-b px-6">
             <Wallet className="h-6 w-6" />
-            <span className="font-bold">Vaultify</span>
+            <span className="font-bold">LEXIA Finance</span>
           </div>
           <div className="px-4 py-4">
             <Input placeholder="Search" className="bg-background/50" />
@@ -25,19 +25,19 @@ export default function Page() {
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <BarChart3 className="h-4 w-4" />
-              Statistics & Income
+              Income & Expenses
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <Globe className="h-4 w-4" />
-              Market
+              Reports
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <Home className="h-4 w-4" />
-              Funding
+              Budget
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <Wallet className="h-4 w-4" />
-              Yield Vaults
+              Accounts
               <ChevronDown className="ml-auto h-4 w-4" />
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
@@ -53,34 +53,34 @@ export default function Page() {
         <main className="p-6">
           <div className="mb-6 flex items-center justify-between">
             <div className="space-y-1">
-              <h1 className="text-2xl font-bold">Overview</h1>
+              <h1 className="text-2xl font-bold">Financial Overview</h1>
               <div className="text-sm text-muted-foreground">Aug 13, 2023 - Aug 18, 2023</div>
             </div>
             <Button variant="outline" className="gap-2">
-              Ethereum Network
+              Fiscal Period
               <ChevronDown className="h-4 w-4" />
             </Button>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             <MetricsCard
-              title="Your Balance"
+              title="Total Income"
               value="$74,892"
-              change={{ value: "$1,340", percentage: "-2.1%", isPositive: false }}
+              change={{ value: "$1,340", percentage: "+2.1%", isPositive: true }}
             />
             <MetricsCard
-              title="Your Deposits"
+              title="Total Expenses"
               value="$54,892"
-              change={{ value: "$1,340", percentage: "+13.2%", isPositive: true }}
+              change={{ value: "$1,340", percentage: "-1.3%", isPositive: false }}
             />
             <MetricsCard
-              title="Accrued Yield"
-              value="$20,892"
+              title="Net Profit"
+              value="$20,000"
               change={{ value: "$1,340", percentage: "+1.2%", isPositive: true }}
             />
           </div>
           <Card className="mt-6 p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">General Statistics</h2>
+              <h2 className="text-lg font-semibold">Cash Flow</h2>
               <div className="flex gap-2">
                 <Button size="sm" variant="ghost">
                   Today
@@ -102,7 +102,7 @@ export default function Page() {
             <StatsChart />
           </Card>
           <div className="mt-6">
-            <VaultTable />
+            <RecordsTable />
           </div>
         </main>
       </div>
