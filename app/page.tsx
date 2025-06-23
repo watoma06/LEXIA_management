@@ -4,13 +4,28 @@ import { Input } from "@/components/ui/input"
 import { MetricsCard } from "@/components/metrics-card"
 import { StatsChart } from "@/components/stats-chart"
 import { RecordsTable } from "@/components/vault-table"
-import { BarChart3, ChevronDown, Globe, Home, LayoutDashboard, LifeBuoy, Settings, Wallet } from "lucide-react"
+import { MobileNav } from "@/components/mobile-nav"
+import {
+  BarChart3,
+  ChevronDown,
+  Globe,
+  Home,
+  LayoutDashboard,
+  LifeBuoy,
+  Settings,
+  Wallet,
+} from "lucide-react"
 
 export default function Page() {
   return (
     <div className="min-h-screen bg-black text-white">
+      <header className="flex items-center h-16 gap-2 border-b px-4 lg:hidden">
+        <MobileNav />
+        <Wallet className="h-6 w-6" />
+        <span className="font-bold">LEXIA Finance</span>
+      </header>
       <div className="grid lg:grid-cols-[280px_1fr]">
-        <aside className="border-r bg-background/50 backdrop-blur">
+        <aside className="hidden border-r bg-background/50 backdrop-blur lg:block">
           <div className="flex h-16 items-center gap-2 border-b px-6">
             <Wallet className="h-6 w-6" />
             <span className="font-bold">LEXIA Finance</span>
