@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import Link from "next/link"
 import {
   Sheet,
   SheetContent,
@@ -36,13 +37,17 @@ export function MobileNav() {
           <Input placeholder="検索" className="bg-background/50" />
         </div>
         <nav className="space-y-2 px-2">
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <LayoutDashboard className="h-4 w-4" />
-            ダッシュボード
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link href="/">
+              <LayoutDashboard className="h-4 w-4" />
+              ダッシュボード
+            </Link>
           </Button>
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <BarChart3 className="h-4 w-4" />
-            収入と支出
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link href="/records">
+              <BarChart3 className="h-4 w-4" />
+              収入と支出
+            </Link>
           </Button>
           <Button variant="ghost" className="w-full justify-start gap-2">
             <Globe className="h-4 w-4" />
