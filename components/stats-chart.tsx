@@ -1,6 +1,14 @@
 "use client"
 
-import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts"
+import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts"
 
 export interface ChartDataItem {
   date: string
@@ -15,7 +23,10 @@ export function StatsChart({ data }: StatsChartProps) {
   return (
     <div className="h-[300px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
+        <LineChart data={data} margin={{ top: 10, right: 20, left: 20, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
           <Tooltip
             content={({ active, payload }) => {
               if (active && payload && payload.length) {

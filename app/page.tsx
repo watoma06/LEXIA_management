@@ -171,12 +171,6 @@ export default function Page() {
               <h2 className="text-lg font-semibold">キャッシュフロー</h2>
               <div className="flex gap-2">
                 <Button size="sm" variant="ghost">
-                  今日
-                </Button>
-                <Button size="sm" variant="ghost">
-                  先週
-                </Button>
-                <Button size="sm" variant="ghost">
                   先月
                 </Button>
                 <Button size="sm" variant="ghost">
