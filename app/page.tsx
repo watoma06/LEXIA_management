@@ -11,7 +11,7 @@ import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { MobileNav } from "@/components/mobile-nav"
 import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
 import { EditRecordDialog } from "@/components/edit-record-dialog"
-import { supabase } from "@/lib/supabase"
+import { supabase, TABLE_NAME } from "@/lib/supabase"
 import { format } from "date-fns"
 import {
   BarChart3,
@@ -31,7 +31,7 @@ export default function Page() {
 
   useEffect(() => {
     supabase
-      .from("records")
+      .from(TABLE_NAME)
       .select("*")
       .then(({ data }) => setRecords(data ?? []))
       .catch(() => setRecords([]))
@@ -39,7 +39,7 @@ export default function Page() {
 
   const handleAdd = async (record: NewRecord) => {
     const { data } = await supabase
-      .from("records")
+      .from(TABLE_NAME)
       .insert(record)
       .select()
       .single()
@@ -48,7 +48,7 @@ export default function Page() {
 
   const handleUpdate = async (updated: RecordItem) => {
     const { data } = await supabase
-      .from("records")
+      .from(TABLE_NAME)
       .update(updated)
       .eq("id", updated.id)
       .select()
@@ -60,7 +60,7 @@ export default function Page() {
   }
 
   const handleDelete = async (id: number) => {
-    await supabase.from("records").delete().eq("id", id)
+    await supabase.from(TABLE_NAME).delete().eq("id", id)
     setRecords((prev) => prev.filter((r) => r.id !== id))
   }
 
