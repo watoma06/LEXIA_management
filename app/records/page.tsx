@@ -54,7 +54,7 @@ export default function RecordsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
+    <div className="min-h-screen bg-background text-foreground p-6">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">収入と支出</h1>
         <AddRecordDialog onAdd={handleAdd} onImport={handleImport} />

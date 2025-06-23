@@ -121,7 +121,7 @@ export default function Page() {
   }, [records])
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <header className="flex items-center h-16 gap-2 border-b px-4 lg:hidden">
         <MobileNav />
         <Wallet className="h-6 w-6" />
