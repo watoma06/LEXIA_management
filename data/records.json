@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "category": "Income",
+    "type": "制作費",
+    "date": "2024-05-10",
+    "amount": 13643,
+    "client": "顧客A",
+    "item": "Web制作",
+    "note": "初期契約"
+  },
+  {
+    "id": 2,
+    "category": "Expense",
+    "type": "維持費",
+    "date": "2024-05-12",
+    "amount": 1200,
+    "client": "事務用品店",
+    "item": "文房具",
+    "note": ""
+  }
+]

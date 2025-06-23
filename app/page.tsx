@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -23,43 +23,43 @@ import {
 } from "lucide-react"
 
 export default function Page() {
-  const [records, setRecords] = useState<RecordItem[]>([
-    {
-      id: 1,
-      category: "Income",
-      type: "制作費",
-      date: "2024-05-10",
-      amount: 13643,
-      client: "顧客A",
-      item: "Web制作",
-      note: "初期契約",
-    },
-    {
-      id: 2,
-      category: "Expense",
-      type: "維持費",
-      date: "2024-05-12",
-      amount: 1200,
-      client: "事務用品店",
-      item: "文房具",
-      note: "",
-    },
-  ])
+  const [records, setRecords] = useState<RecordItem[]>([])
 
   const [editing, setEditing] = useState<RecordItem | null>(null)
 
-  const handleAdd = (record: NewRecord) => {
-    setRecords((prev) => [
-      ...prev,
-      { id: prev.length + 1, ...record },
-    ])
+  useEffect(() => {
+    fetch("/api/records")
+      .then((res) => res.json())
+      .then(setRecords)
+      .catch(() => setRecords([]))
+  }, [])
+
+  const handleAdd = async (record: NewRecord) => {
+    const res = await fetch("/api/records", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(record),
+    })
+    const data: RecordItem = await res.json()
+    setRecords((prev) => [...prev, data])
   }
 
-  const handleUpdate = (updated: RecordItem) => {
-    setRecords((prev) => prev.map((r) => (r.id === updated.id ? updated : r)))
+  const handleUpdate = async (updated: RecordItem) => {
+    const res = await fetch("/api/records", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
+    })
+    const data: RecordItem = await res.json()
+    setRecords((prev) => prev.map((r) => (r.id === data.id ? data : r)))
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
+    await fetch("/api/records", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    })
     setRecords((prev) => prev.filter((r) => r.id !== id))
   }
 
