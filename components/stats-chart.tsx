@@ -21,7 +21,7 @@ interface StatsChartProps {
 
 export function StatsChart({ data }: StatsChartProps) {
   return (
-    <div className="h-[300px] w-full">
+    <div className="h-[300px] w-full min-w-0 overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 10, right: 20, left: 20, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" />
