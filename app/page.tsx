@@ -71,9 +71,30 @@ export default function Page() {
     setRecords((prev) => prev.filter((r) => r.id !== id))
   }
 
+  const [range, setRange] = useState<"last-month" | "six-months" | "this-year">(
+    "six-months"
+  )
+
   const profitChartData = useMemo(() => {
+    const now = new Date()
+    let start: Date | null = null
+    if (range === "last-month") {
+      start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+    } else if (range === "six-months") {
+      start = new Date(now.getFullYear(), now.getMonth() - 5, 1)
+    } else if (range === "this-year") {
+      start = new Date(now.getFullYear(), 0, 1)
+    }
+
+    const filtered = records.filter((r) => {
+      const d = new Date(r.date)
+      if (start && d < start) return false
+      if (d > now) return false
+      return true
+    })
+
     const map = new Map<string, number>()
-    records.forEach((r) => {
+    filtered.forEach((r) => {
       const key = format(new Date(r.date), "yyyy-MM")
       const value = r.category === "Income" ? r.amount : -r.amount
       map.set(key, (map.get(key) || 0) + value)
@@ -85,7 +106,7 @@ export default function Page() {
         cumulative += v
         return { date: format(new Date(k + "-01"), "M月"), value: cumulative }
       })
-  }, [records])
+  }, [records, range])
 
   const totals = useMemo(() => {
     return records.reduce(
@@ -193,13 +214,25 @@ export default function Page() {
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold">累計純利益</h2>
               <div className="flex gap-2">
-                <Button size="sm" variant="ghost">
+                <Button
+                  size="sm"
+                  variant={range === "last-month" ? "default" : "ghost"}
+                  onClick={() => setRange("last-month")}
+                >
                   先月
                 </Button>
-                <Button size="sm" variant="ghost">
+                <Button
+                  size="sm"
+                  variant={range === "six-months" ? "default" : "ghost"}
+                  onClick={() => setRange("six-months")}
+                >
                   過去6か月
                 </Button>
-                <Button size="sm" variant="ghost">
+                <Button
+                  size="sm"
+                  variant={range === "this-year" ? "default" : "ghost"}
+                  onClick={() => setRange("this-year")}
+                >
                   今年
                 </Button>
               </div>
