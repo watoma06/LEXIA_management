@@ -38,8 +38,8 @@ This project now stores records in Supabase. Create a `.env.local` file based on
 
 Bulk import expects a CSV file with the following header columns:
 
-```
+\`\`\`
 category,type,date,amount,client,item,note
-```
+\`\`\`
 
 `category` should be either `Income` or `Expense`, `type` can be `維持費`, `制作費` or `その他`, and `date` must be in `YYYY-MM-DD` format. `amount` should be a number.
