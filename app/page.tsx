@@ -46,6 +46,14 @@ export default function Page() {
     if (data) setRecords((prev) => [...prev, data as RecordItem])
   }
 
+  const handleImport = async (records: NewRecord[]) => {
+    const { data } = await supabase
+      .from(TABLE_NAME)
+      .insert(records)
+      .select()
+    if (data) setRecords((prev) => [...prev, ...(data as RecordItem[])])
+  }
+
   const handleUpdate = async (updated: RecordItem) => {
     const { data } = await supabase
       .from(TABLE_NAME)
@@ -163,7 +171,7 @@ export default function Page() {
                 会計期間
                 <ChevronDown className="h-4 w-4" />
               </Button>
-              <AddRecordDialog onAdd={handleAdd} />
+              <AddRecordDialog onAdd={handleAdd} onImport={handleImport} />
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-3">

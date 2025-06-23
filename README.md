@@ -33,3 +33,13 @@ Continue building your app on:
 This project now stores records in Supabase. Create a `.env.local` file based on
 `.env.example` and provide your `NEXT_PUBLIC_SUPABASE_URL` and
 `NEXT_PUBLIC_SUPABASE_ANON_KEY` values.
+
+## CSV Import Format
+
+Bulk import expects a CSV file with the following header columns:
+
+```
+category,type,date,amount,client,item,note
+```
+
+`category` should be either `Income` or `Expense`, `type` can be `維持費`, `制作費` or `その他`, and `date` must be in `YYYY-MM-DD` format. `amount` should be a number.

@@ -27,6 +27,14 @@ export default function RecordsPage() {
     if (data) setRecords((prev) => [...prev, data as RecordItem])
   }
 
+  const handleImport = async (records: NewRecord[]) => {
+    const { data } = await supabase
+      .from(TABLE_NAME)
+      .insert(records)
+      .select()
+    if (data) setRecords((prev) => [...prev, ...(data as RecordItem[])])
+  }
+
   const handleUpdate = async (updated: RecordItem) => {
     const { data } = await supabase
       .from(TABLE_NAME)
@@ -49,7 +57,7 @@ export default function RecordsPage() {
     <div className="min-h-screen bg-black text-white p-6">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">収入と支出</h1>
-        <AddRecordDialog onAdd={handleAdd} />
+        <AddRecordDialog onAdd={handleAdd} onImport={handleImport} />
       </div>
       <RecordsTable
         records={records}

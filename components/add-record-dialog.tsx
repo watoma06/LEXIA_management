@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, ChangeEvent } from "react"
+import Papa from "papaparse"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -20,9 +21,10 @@ export type NewRecord = {
 
 interface AddRecordDialogProps {
   onAdd: (record: NewRecord) => void
+  onImport?: (records: NewRecord[]) => void
 }
 
-export function AddRecordDialog({ onAdd }: AddRecordDialogProps) {
+export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState<NewRecord>({
     category: "Income",
@@ -50,6 +52,30 @@ export function AddRecordDialog({ onAdd }: AddRecordDialogProps) {
       item: "",
       note: "",
     })
+  }
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    Papa.parse<NewRecord>(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        const records = (results.data as any[]).map((r) => ({
+          ...r,
+          amount: Number(r.amount),
+        })) as NewRecord[]
+        if (onImport) records.length && onImport(records)
+        else records.forEach((r) => onAdd(r))
+      },
+    })
+    e.target.value = ""
   }
 
   return (
@@ -107,7 +133,16 @@ export function AddRecordDialog({ onAdd }: AddRecordDialogProps) {
           <Textarea value={form.note} onChange={(e) => handleChange("note", e.target.value)} />
         </div>
         <DialogFooter className="flex gap-2">
-          <Button variant="outline">インポート</Button>
+          <input
+            type="file"
+            accept=".csv"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
+          <Button variant="outline" onClick={handleImportClick}>
+            インポート
+          </Button>
           <Button onClick={handleSubmit}>完了</Button>
         </DialogFooter>
       </DialogContent>
