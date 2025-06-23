@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { MetricsCard } from "@/components/metrics-card"
 import { StatsChart } from "@/components/stats-chart"
+import { CategoryChart } from "@/components/category-chart"
 import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { MobileNav } from "@/components/mobile-nav"
 import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
@@ -71,42 +72,27 @@ export default function Page() {
     setRecords((prev) => prev.filter((r) => r.id !== id))
   }
 
-  const [range, setRange] = useState<"last-month" | "six-months" | "this-year">(
-    "six-months"
-  )
-
   const profitChartData = useMemo(() => {
-    const now = new Date()
-    let start: Date | null = null
-    if (range === "last-month") {
-      start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-    } else if (range === "six-months") {
-      start = new Date(now.getFullYear(), now.getMonth() - 5, 1)
-    } else if (range === "this-year") {
-      start = new Date(now.getFullYear(), 0, 1)
-    }
-
-    const filtered = records.filter((r) => {
-      const d = new Date(r.date)
-      if (start && d < start) return false
-      if (d > now) return false
-      return true
-    })
-
     const map = new Map<string, number>()
-    filtered.forEach((r) => {
+    records.forEach((r) => {
       const key = format(new Date(r.date), "yyyy-MM")
       const value = r.category === "Income" ? r.amount : -r.amount
       map.set(key, (map.get(key) || 0) + value)
     })
-    let cumulative = 0
     return Array.from(map.entries())
       .sort(([a], [b]) => (a > b ? 1 : -1))
-      .map(([k, v]) => {
-        cumulative += v
-        return { date: format(new Date(k + "-01"), "M月"), value: cumulative }
-      })
-  }, [records, range])
+      .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
+  }, [records])
+
+  const categoryData = useMemo(() => {
+    const map = new Map<string, number>()
+    records.forEach((r) => {
+      if (r.category === "Expense") {
+        map.set(r.type, (map.get(r.type) || 0) + r.amount)
+      }
+    })
+    return Array.from(map.entries()).map(([name, value]) => ({ name, value }))
+  }, [records])
 
   const totals = useMemo(() => {
     return records.reduce(
@@ -211,33 +197,12 @@ export default function Page() {
             />
           </div>
           <Card className="mt-6 p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">累計純利益</h2>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant={range === "last-month" ? "default" : "ghost"}
-                  onClick={() => setRange("last-month")}
-                >
-                  先月
-                </Button>
-                <Button
-                  size="sm"
-                  variant={range === "six-months" ? "default" : "ghost"}
-                  onClick={() => setRange("six-months")}
-                >
-                  過去6か月
-                </Button>
-                <Button
-                  size="sm"
-                  variant={range === "this-year" ? "default" : "ghost"}
-                  onClick={() => setRange("this-year")}
-                >
-                  今年
-                </Button>
-              </div>
-            </div>
+            <h2 className="text-lg font-semibold mb-4">月別純利益</h2>
             <StatsChart data={profitChartData} />
+          </Card>
+          <Card className="mt-6 p-6">
+            <h2 className="text-lg font-semibold mb-4">カテゴリ別支出割合</h2>
+            <CategoryChart data={categoryData} />
           </Card>
           <div className="mt-6">
             <RecordsTable
