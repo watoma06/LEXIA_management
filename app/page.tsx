@@ -125,9 +125,11 @@ export default function Page() {
                 収入と支出
               </Link>
             </Button>
-            <Button variant="ghost" className="w-full justify-start gap-2">
-              <Globe className="h-4 w-4" />
-              レポート
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/reports">
+                <Globe className="h-4 w-4" />
+                レポート
+              </Link>
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <Home className="h-4 w-4" />
