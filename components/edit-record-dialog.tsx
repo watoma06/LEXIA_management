@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { DatePicker } from "@/components/date-picker"
 import {
   Select,
   SelectContent,
@@ -93,7 +94,7 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
         </div>
         <div className="grid gap-2">
           <label className="text-sm">日付</label>
-          <Input type="date" value={form.date} onChange={(e) => handleChange("date", e.target.value)} />
+          <DatePicker date={form.date} onChange={(v) => handleChange("date", v)} />
         </div>
         <div className="grid gap-2">
           <label className="text-sm">金額</label>
