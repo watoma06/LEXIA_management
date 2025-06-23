@@ -43,13 +43,13 @@ export function RecordsTable() {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Category</TableHead>
-          <TableHead>Today</TableHead>
-          <TableHead>Amount ↓</TableHead>
-          <TableHead>Change ↓</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Date</TableHead>
-          <TableHead>Priority</TableHead>
+          <TableHead>カテゴリ</TableHead>
+          <TableHead>本日</TableHead>
+          <TableHead>金額 ↓</TableHead>
+          <TableHead>変動 ↓</TableHead>
+          <TableHead>タイプ</TableHead>
+          <TableHead>日付</TableHead>
+          <TableHead>優先度</TableHead>
           <TableHead></TableHead>
         </TableRow>
       </TableHeader>
@@ -76,7 +76,7 @@ export function RecordsTable() {
                   record.type === "Income" ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"
                 }`}
               >
-                {record.type}
+                {record.type === "Income" ? "収入" : "支出"}
               </span>
             </TableCell>
             <TableCell>{record.date}</TableCell>
