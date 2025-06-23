@@ -1,68 +1,74 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import type { RecordItem } from "./vault-table"
 
-export type NewRecord = {
-  category: "Income" | "Expense"
-  type: "維持費" | "制作費" | "その他"
-  date: string
-  amount: number
-  client: string
-  item: string
-  note: string
+interface EditRecordDialogProps {
+  record: RecordItem
+  onEdit: (record: RecordItem) => void
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  trigger?: React.ReactNode
 }
 
-interface AddRecordDialogProps {
-  onAdd: (record: NewRecord) => void
-}
+export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, trigger }: EditRecordDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(open)
+  const [form, setForm] = useState<RecordItem>(record)
 
-export function AddRecordDialog({ onAdd }: AddRecordDialogProps) {
-  const [open, setOpen] = useState(false)
-  const [form, setForm] = useState<NewRecord>({
-    category: "Income",
-    type: "維持費",
-    date: new Date().toISOString().slice(0, 10),
-    amount: 0,
-    client: "",
-    item: "",
-    note: "",
-  })
+  useEffect(() => {
+    setForm(record)
+  }, [record])
 
-  const handleChange = (key: keyof NewRecord, value: any) => {
+  useEffect(() => {
+    setInternalOpen(open)
+  }, [open])
+
+  const handleChange = (key: keyof RecordItem, value: any) => {
     setForm({ ...form, [key]: value })
   }
 
   const handleSubmit = () => {
-    onAdd({ ...form, amount: Number(form.amount) })
-    setOpen(false)
-    setForm({
-      category: "Income",
-      type: "維持費",
-      date: new Date().toISOString().slice(0, 10),
-      amount: 0,
-      client: "",
-      item: "",
-      note: "",
-    })
+    onEdit({ ...form, amount: Number(form.amount) })
+    if (onOpenChange) {
+      onOpenChange(false)
+    } else {
+      setInternalOpen(false)
+    }
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">追加</Button>
-      </DialogTrigger>
+    <Dialog
+      open={onOpenChange ? open : internalOpen}
+      onOpenChange={(v) => {
+        onOpenChange ? onOpenChange(v) : setInternalOpen(v)
+      }}
+    >
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="space-y-4">
         <DialogHeader>
-          <DialogTitle>新規レコード追加</DialogTitle>
+          <DialogTitle>レコード編集</DialogTitle>
         </DialogHeader>
         <div className="grid gap-2">
           <label className="text-sm">カテゴリ</label>
-          <Select value={form.category} onValueChange={(v) => handleChange("category", v as NewRecord["category"])}>
+          <Select value={form.category} onValueChange={(v) => handleChange("category", v as RecordItem["category"])}>
             <SelectTrigger>
               <SelectValue placeholder="カテゴリ" />
             </SelectTrigger>
@@ -74,7 +80,7 @@ export function AddRecordDialog({ onAdd }: AddRecordDialogProps) {
         </div>
         <div className="grid gap-2">
           <label className="text-sm">タイプ</label>
-          <Select value={form.type} onValueChange={(v) => handleChange("type", v as NewRecord["type"])}>
+          <Select value={form.type} onValueChange={(v) => handleChange("type", v as RecordItem["type"])}>
             <SelectTrigger>
               <SelectValue placeholder="タイプ" />
             </SelectTrigger>
@@ -106,7 +112,7 @@ export function AddRecordDialog({ onAdd }: AddRecordDialogProps) {
           <Textarea value={form.note} onChange={(e) => handleChange("note", e.target.value)} />
         </div>
         <DialogFooter>
-          <Button onClick={handleSubmit}>完了</Button>
+          <Button onClick={handleSubmit}>保存</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

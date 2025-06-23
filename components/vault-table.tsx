@@ -1,4 +1,14 @@
+"use client"
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import { MoreHorizontal } from "lucide-react"
 
 export type RecordItem = {
   id: number
@@ -13,9 +23,11 @@ export type RecordItem = {
 
 interface RecordsTableProps {
   records: RecordItem[]
+  onEdit?: (record: RecordItem) => void
+  onDelete?: (id: number) => void
 }
 
-export function RecordsTable({ records }: RecordsTableProps) {
+export function RecordsTable({ records, onEdit, onDelete }: RecordsTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -27,6 +39,7 @@ export function RecordsTable({ records }: RecordsTableProps) {
           <TableHead>相手先／クライアント</TableHead>
           <TableHead>品目</TableHead>
           <TableHead>備考</TableHead>
+          <TableHead className="w-0" />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -39,6 +52,23 @@ export function RecordsTable({ records }: RecordsTableProps) {
             <TableCell>{record.client}</TableCell>
             <TableCell>{record.item}</TableCell>
             <TableCell>{record.note}</TableCell>
+            <TableCell className="text-right">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="icon" variant="ghost">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => onEdit?.(record)}>
+                    編集
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onDelete?.(record.id)} className="text-destructive">
+                    削除
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

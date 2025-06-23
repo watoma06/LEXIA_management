@@ -9,6 +9,7 @@ import { StatsChart } from "@/components/stats-chart"
 import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { MobileNav } from "@/components/mobile-nav"
 import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
+import { EditRecordDialog } from "@/components/edit-record-dialog"
 import { format } from "date-fns"
 import {
   BarChart3,
@@ -45,11 +46,21 @@ export default function Page() {
     },
   ])
 
+  const [editing, setEditing] = useState<RecordItem | null>(null)
+
   const handleAdd = (record: NewRecord) => {
     setRecords((prev) => [
       ...prev,
       { id: prev.length + 1, ...record },
     ])
+  }
+
+  const handleUpdate = (updated: RecordItem) => {
+    setRecords((prev) => prev.map((r) => (r.id === updated.id ? updated : r)))
+  }
+
+  const handleDelete = (id: number) => {
+    setRecords((prev) => prev.filter((r) => r.id !== id))
   }
 
   const chartData = useMemo(() => {
@@ -179,8 +190,23 @@ export default function Page() {
             <StatsChart data={chartData} />
           </Card>
           <div className="mt-6">
-            <RecordsTable records={records} />
+            <RecordsTable
+              records={records}
+              onEdit={(r) => setEditing(r)}
+              onDelete={handleDelete}
+            />
           </div>
+          {editing && (
+            <EditRecordDialog
+              record={editing}
+              onEdit={(r) => {
+                handleUpdate(r)
+                setEditing(null)
+              }}
+              open={true}
+              onOpenChange={(v) => !v && setEditing(null)}
+            />
+          )}
         </main>
       </div>
     </div>
