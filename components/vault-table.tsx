@@ -33,7 +33,7 @@ export function RecordsTable({ records, onEdit, onDelete }: RecordsTableProps) {
       <TableHeader>
         <TableRow>
           <TableHead>カテゴリ</TableHead>
-          <TableHead>タイプ</TableHead>
+          <TableHead>勘定科目</TableHead>
           <TableHead>日付</TableHead>
           <TableHead>金額</TableHead>
           <TableHead>相手先／クライアント</TableHead>

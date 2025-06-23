@@ -79,10 +79,10 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
           </Select>
         </div>
         <div className="grid gap-2">
-          <label className="text-sm">タイプ</label>
+          <label className="text-sm">勘定科目</label>
           <Select value={form.type} onValueChange={(v) => handleChange("type", v as RecordItem["type"])}>
             <SelectTrigger>
-              <SelectValue placeholder="タイプ" />
+              <SelectValue placeholder="勘定科目" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="維持費">維持費</SelectItem>
