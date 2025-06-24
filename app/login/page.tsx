@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, FormEvent } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,6 +9,7 @@ import Link from "next/link"
 
 export default function LoginPage() {
   const { signIn } = useAuth()
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -17,6 +19,7 @@ export default function LoginPage() {
     setError(null)
     try {
       await signIn(email, password)
+      router.push('/')
     } catch (err: any) {
       setError(err.message)
     }
