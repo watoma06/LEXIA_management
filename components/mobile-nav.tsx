@@ -18,7 +18,6 @@ import {
   Settings,
   Wallet,
 } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
 
 export function MobileNav() {
   return (
@@ -64,13 +63,12 @@ export function MobileNav() {
             アカウント
             <ChevronDown className="ml-auto h-4 w-4" />
           </Button>
-          <Button variant="ghost" className="w-full justify-start gap-2">
-            <Settings className="h-4 w-4" />
-            設定
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link href="/settings">
+              <Settings className="h-4 w-4" />
+              設定
+            </Link>
           </Button>
-          <div className="flex justify-center py-2">
-            <ThemeToggle />
-          </div>
         </nav>
       </SheetContent>
     </Sheet>
