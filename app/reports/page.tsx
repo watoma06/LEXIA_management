@@ -9,6 +9,7 @@ import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { DatePicker } from "@/components/date-picker"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import DashboardLayout from "@/components/dashboard-layout"
 import { format } from "date-fns"
 import Papa from "papaparse"
@@ -69,6 +70,20 @@ export default function ReportsPage() {
     return Array.from(map.entries()).map(([name, value]) => ({ name, value }))
   }, [filteredRecords])
 
+  const itemProfits = useMemo(() => {
+    const map = new Map<number, { name: string; income: number; expense: number }>()
+    filteredRecords.forEach((r) => {
+      const entry = map.get(r.item_id) || { name: r.item, income: 0, expense: 0 }
+      if (r.category === "Income") entry.income += r.amount
+      else entry.expense += r.amount
+      map.set(r.item_id, entry)
+    })
+    return Array.from(map.values()).map(({ name, income, expense }) => ({
+      name,
+      value: income - expense,
+    }))
+  }, [filteredRecords])
+
   const handleExport = () => {
     const csv = Papa.unparse(filteredRecords)
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
@@ -114,6 +129,27 @@ export default function ReportsPage() {
       <Card className="mt-6 p-6">
         <h2 className="text-lg font-semibold mb-4">カテゴリ別支出割合</h2>
         <CategoryChart data={categoryData} />
+      </Card>
+      <Card className="mt-6 p-6">
+        <h2 className="text-lg font-semibold mb-4">品目別損益</h2>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>品目</TableHead>
+              <TableHead className="text-right">損益</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {itemProfits.map((p) => (
+              <TableRow key={p.name}>
+                <TableCell>{p.name}</TableCell>
+                <TableCell className="text-right">
+                  {p.value.toLocaleString()}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </Card>
       <div className="mt-6 flex justify-end">
         <Button variant="outline" onClick={handleExport}>

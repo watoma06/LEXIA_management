@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select"
 import type { RecordItem } from "./vault-table"
 import { ACCOUNT_TYPES } from "@/lib/accountTypes"
+import { supabase, ITEMS_TABLE } from "@/lib/supabase"
 
 interface EditRecordDialogProps {
   record: RecordItem
@@ -33,7 +34,16 @@ interface EditRecordDialogProps {
 
 export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, trigger }: EditRecordDialogProps) {
   const [internalOpen, setInternalOpen] = useState(open)
+  const [items, setItems] = useState<{ id: number; name: string }[]>([])
   const [form, setForm] = useState<RecordItem>(record)
+
+  useEffect(() => {
+    supabase
+      .from(ITEMS_TABLE)
+      .select('*')
+      .then(({ data }) => setItems(data ?? []))
+      .catch(() => setItems([]))
+  }, [])
 
   useEffect(() => {
     setForm(record)
@@ -109,7 +119,26 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
         </div>
         <div className="grid gap-2">
           <label className="text-sm">品目</label>
-          <Input value={form.item} onChange={(e) => handleChange("item", e.target.value)} />
+          <Select
+            value={String(form.item_id)}
+            onValueChange={(v) => {
+              const id = Number(v)
+              const item = items.find((i) => i.id === id)
+              handleChange("item_id", id)
+              handleChange("item", item?.name || "")
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="品目" />
+            </SelectTrigger>
+            <SelectContent>
+              {items.map((i) => (
+                <SelectItem key={i.id} value={String(i.id)}>
+                  {i.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="grid gap-2">
           <label className="text-sm">備考</label>

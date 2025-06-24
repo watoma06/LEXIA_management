@@ -21,6 +21,7 @@ export type RecordItem = {
   amount: number
   client: string
   item: string
+  item_id: number
   note: string
 }
 
