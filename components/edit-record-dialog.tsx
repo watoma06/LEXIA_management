@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import type { RecordItem } from "./vault-table"
-// Account types are now entered as free text
+import { ACCOUNT_TYPES } from "@/lib/accountTypes"
 import { supabase, ITEMS_TABLE } from "@/lib/supabase"
 
 interface EditRecordDialogProps {
@@ -54,7 +54,7 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
   }, [open])
 
   const handleChange = (key: keyof RecordItem, value: any) => {
-    setForm({ ...form, [key]: value })
+    setForm((prev) => ({ ...prev, [key]: value }))
   }
 
   const handleSubmit = () => {
@@ -92,11 +92,18 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
         </div>
         <div className="grid gap-2">
           <label className="text-sm">勘定科目</label>
-          <Input
-            value={form.type}
-            onChange={(e) => handleChange("type", e.target.value)}
-            placeholder="勘定科目"
-          />
+          <Select value={form.type} onValueChange={(v) => handleChange("type", v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="勘定科目" />
+            </SelectTrigger>
+            <SelectContent>
+              {ACCOUNT_TYPES.map((t) => (
+                <SelectItem key={t} value={t}>
+                  {t}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="grid gap-2">
           <label className="text-sm">日付</label>
