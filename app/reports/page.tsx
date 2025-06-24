@@ -127,7 +127,7 @@ export default function ReportsPage() {
         <StatsChart data={profitChartData} />
       </Card>
       <Card className="mt-6 p-6">
-        <h2 className="text-lg font-semibold mb-4">カテゴリ別支出割合</h2>
+        <h2 className="text-lg font-semibold mb-4">勘定科目別支出割合</h2>
         <CategoryChart data={categoryData} />
       </Card>
       <Card className="mt-6 p-6">
