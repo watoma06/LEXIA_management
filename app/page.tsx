@@ -10,6 +10,7 @@ import { StatsChart } from "@/components/stats-chart"
 import { CategoryChart } from "@/components/category-chart"
 import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { MobileNav } from "@/components/mobile-nav"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
 import { EditRecordDialog } from "@/components/edit-record-dialog"
 import { supabase, TABLE_NAME } from "@/lib/supabase"
@@ -154,6 +155,9 @@ export default function Page() {
               <Settings className="h-4 w-4" />
               設定
             </Button>
+            <div className="flex justify-center py-2">
+              <ThemeToggle />
+            </div>
           </nav>
         </aside>
         <main className="p-6">

@@ -18,6 +18,7 @@ import {
   Settings,
   Wallet,
 } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export function MobileNav() {
   return (
@@ -67,6 +68,9 @@ export function MobileNav() {
             <Settings className="h-4 w-4" />
             設定
           </Button>
+          <div className="flex justify-center py-2">
+            <ThemeToggle />
+          </div>
         </nav>
       </SheetContent>
     </Sheet>
