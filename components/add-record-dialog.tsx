@@ -8,10 +8,11 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { DatePicker } from "@/components/date-picker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ACCOUNT_TYPES, AccountType } from "@/lib/accountTypes"
 
 export type NewRecord = {
   category: "Income" | "Expense"
-  type: "維持費" | "制作費" | "その他"
+  type: AccountType
   date: string
   amount: number
   client: string
@@ -28,7 +29,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState<NewRecord>({
     category: "Income",
-    type: "維持費",
+    type: ACCOUNT_TYPES[0],
     date: new Date().toISOString().slice(0, 10),
     amount: 0,
     client: "",
@@ -45,7 +46,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
     setOpen(false)
     setForm({
       category: "Income",
-      type: "維持費",
+      type: ACCOUNT_TYPES[0],
       date: new Date().toISOString().slice(0, 10),
       amount: 0,
       client: "",
@@ -106,9 +107,11 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
               <SelectValue placeholder="勘定科目" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="維持費">維持費</SelectItem>
-              <SelectItem value="制作費">制作費</SelectItem>
-              <SelectItem value="その他">その他</SelectItem>
+              {ACCOUNT_TYPES.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

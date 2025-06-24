@@ -11,11 +11,12 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { MoreHorizontal, ChevronUp, ChevronDown } from "lucide-react"
 import { useState, useMemo } from "react"
+import type { AccountType } from "@/lib/accountTypes"
 
 export type RecordItem = {
   id: number
   category: "Income" | "Expense"
-  type: "維持費" | "制作費" | "その他"
+  type: AccountType
   date: string
   amount: number
   client: string
