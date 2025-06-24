@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import LogoutButton from "@/components/LogoutButton"
 import Link from "next/link"
 import {
@@ -33,9 +32,6 @@ export function MobileNav() {
         <div className="flex h-16 items-center gap-2 border-b px-6">
           <Wallet className="h-6 w-6" />
           <span className="font-bold">LEXIAファイナンス</span>
-        </div>
-        <div className="px-4 py-4">
-          <Input placeholder="検索" className="bg-background/50" />
         </div>
         <nav className="space-y-2 px-2">
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
