@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react"
 import { supabase, TABLE_NAME } from "@/lib/supabase"
 import { MetricsCard } from "@/components/metrics-card"
 import { StatsChart } from "@/components/stats-chart"
-import { CategoryChart } from "@/components/category-chart"
 import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { DatePicker } from "@/components/date-picker"
 import { Button } from "@/components/ui/button"
@@ -58,16 +57,6 @@ export default function ReportsPage() {
     return Array.from(map.entries())
       .sort(([a], [b]) => (a > b ? 1 : -1))
       .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
-  }, [filteredRecords])
-
-  const categoryData = useMemo(() => {
-    const map = new Map<string, number>()
-    filteredRecords.forEach((r) => {
-      if (r.category === "Expense") {
-        map.set(r.type, (map.get(r.type) || 0) + r.amount)
-      }
-    })
-    return Array.from(map.entries()).map(([name, value]) => ({ name, value }))
   }, [filteredRecords])
 
   const itemProfits = useMemo(() => {
@@ -125,10 +114,6 @@ export default function ReportsPage() {
       <Card className="mt-6 p-6">
         <h2 className="text-lg font-semibold mb-4">月別純利益</h2>
         <StatsChart data={profitChartData} />
-      </Card>
-      <Card className="mt-6 p-6">
-        <h2 className="text-lg font-semibold mb-4">カテゴリ別支出割合</h2>
-        <CategoryChart data={categoryData} />
       </Card>
       <Card className="mt-6 p-6">
         <h2 className="text-lg font-semibold mb-4">品目別損益</h2>

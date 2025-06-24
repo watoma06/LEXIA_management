@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { MetricsCard } from "@/components/metrics-card"
 import { StatsChart } from "@/components/stats-chart"
-import { CategoryChart } from "@/components/category-chart"
 import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
 import { EditRecordDialog } from "@/components/edit-record-dialog"
@@ -74,16 +73,6 @@ export default function Page() {
       .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
   }, [records])
 
-  const categoryData = useMemo(() => {
-    const map = new Map<string, number>()
-    records.forEach((r) => {
-      if (r.category === "Expense") {
-        map.set(r.type, (map.get(r.type) || 0) + r.amount)
-      }
-    })
-    return Array.from(map.entries()).map(([name, value]) => ({ name, value }))
-  }, [records])
-
   const totals = useMemo(() => {
     return records.reduce(
       (acc, r) => {
@@ -140,10 +129,6 @@ export default function Page() {
       <Card className="mt-6 p-6">
         <h2 className="text-lg font-semibold mb-4">月別純利益</h2>
         <StatsChart data={profitChartData} />
-      </Card>
-      <Card className="mt-6 p-6">
-        <h2 className="text-lg font-semibold mb-4">カテゴリ別支出割合</h2>
-        <CategoryChart data={categoryData} />
       </Card>
       <div className="mt-6">
         <RecordsTable
