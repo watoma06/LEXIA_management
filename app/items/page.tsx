@@ -25,11 +25,15 @@ export default function ItemsPage() {
 
   const handleAdd = async () => {
     if (!name.trim()) return
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from(ITEMS_TABLE)
       .insert({ name })
       .select()
       .single()
+    if (error) {
+      console.error('Item insert error:', error.message)
+      return
+    }
     if (data) setItems((prev) => [...prev, data as Item])
     setName("")
   }
