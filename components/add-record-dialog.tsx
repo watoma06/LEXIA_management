@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { DatePicker } from "@/components/date-picker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-// Account types are now free text
+import { ACCOUNT_TYPES } from "@/lib/accountTypes"
 import { supabase, ITEMS_TABLE } from "@/lib/supabase"
 
 export type NewRecord = {
@@ -32,7 +32,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   const [items, setItems] = useState<{ id: number; name: string }[]>([])
   const [form, setForm] = useState<NewRecord>({
     category: "Income",
-    type: "",
+    type: ACCOUNT_TYPES[0],
     date: new Date().toISOString().slice(0, 10),
     amount: 0,
     client: "",
@@ -50,7 +50,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   }, [])
 
   const handleChange = (key: keyof NewRecord, value: any) => {
-    setForm({ ...form, [key]: value })
+    setForm((prev) => ({ ...prev, [key]: value }))
   }
 
   const handleSubmit = () => {
@@ -63,7 +63,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
     setOpen(false)
     setForm({
       category: "Income",
-      type: "",
+      type: ACCOUNT_TYPES[0],
       date: new Date().toISOString().slice(0, 10),
       amount: 0,
       client: "",
@@ -121,11 +121,18 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         </div>
         <div className="grid gap-2">
           <label className="text-sm">勘定科目</label>
-          <Input
-            value={form.type}
-            onChange={(e) => handleChange("type", e.target.value)}
-            placeholder="勘定科目"
-          />
+          <Select value={form.type} onValueChange={(v) => handleChange("type", v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="勘定科目" />
+            </SelectTrigger>
+            <SelectContent>
+              {ACCOUNT_TYPES.map((t) => (
+                <SelectItem key={t} value={t}>
+                  {t}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="grid gap-2">
           <label className="text-sm">日付</label>
