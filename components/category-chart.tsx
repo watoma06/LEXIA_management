@@ -1,10 +1,18 @@
 "use client"
 
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer } from "recharts"
+import {
+  BarChart,
+  Bar,
+  Tooltip,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts"
 
-interface CategoryData {
-  name: string
-  value: number
+export interface CategoryData {
+  date: string
+  [key: string]: number | string
 }
 
 const COLORS = [
@@ -16,24 +24,28 @@ const COLORS = [
 ]
 
 export function CategoryChart({ data }: { data: CategoryData[] }) {
+  const categories = Array.from(
+    new Set(
+      data.flatMap((d) => Object.keys(d).filter((k) => k !== "date"))
+    )
+  )
   return (
     <div className="h-[300px] w-full max-w-full min-w-0 overflow-hidden">
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
-          >
-            {data.map((_, index) => (
-              <Cell key={`c-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
+        <BarChart data={data} margin={{ top: 10, right: 20, left: 20, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis />
           <Tooltip />
-        </PieChart>
+          {categories.map((cat, index) => (
+            <Bar
+              key={cat}
+              dataKey={cat}
+              stackId="a"
+              fill={COLORS[index % COLORS.length]}
+            />
+          ))}
+        </BarChart>
       </ResponsiveContainer>
     </div>
   )
