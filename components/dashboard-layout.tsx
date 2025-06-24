@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MobileNav } from "@/components/mobile-nav"
+import { supabase } from "@/lib/supabase"
 import {
   BarChart3,
   ChevronDown,
@@ -69,6 +70,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Settings className="h-4 w-4" />
                 設定
               </Link>
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start gap-2"
+              onClick={() => supabase.auth.signOut()}
+            >
+              ログアウト
             </Button>
           </nav>
         </aside>
