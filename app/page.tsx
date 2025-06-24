@@ -13,8 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { MetricsCard } from "@/components/metrics-card"
-import { StatsChart } from "@/components/stats-chart"
-import { CategoryChart } from "@/components/category-chart"
+import { StatsChart, ChartDataItem } from "@/components/stats-chart"
+import { CategoryChart, CategoryData } from "@/components/category-chart"
 import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
 import { EditRecordDialog } from "@/components/edit-record-dialog"
@@ -100,18 +100,33 @@ export default function Page() {
       .sort(([a], [b]) => (a > b ? 1 : -1))
       .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
     const limit = range === "1m" ? 1 : range === "6m" ? 6 : 12
-    return data.slice(-limit)
+    return data.slice(-limit) as ChartDataItem[]
   }, [filteredRecords, range])
 
-  const categoryData = useMemo(() => {
-    const map = new Map<string, number>()
+  const categoryData = useMemo<CategoryData[]>(() => {
+    const map = new Map<string, Map<string, number>>()
     filteredRecords.forEach((r) => {
       if (r.category === "Expense") {
-        map.set(r.type, (map.get(r.type) || 0) + r.amount)
+        const month = format(new Date(r.date), "yyyy-MM")
+        if (!map.has(month)) map.set(month, new Map())
+        const m = map.get(month)!
+        m.set(r.type, (m.get(r.type) || 0) + r.amount)
       }
     })
-    return Array.from(map.entries()).map(([name, value]) => ({ name, value }))
-  }, [filteredRecords])
+    const data = Array.from(map.entries())
+      .sort(([a], [b]) => (a > b ? 1 : -1))
+      .map(([k, v]) => {
+        const obj: Record<string, number | string> = {
+          date: format(new Date(k + "-01"), "M月"),
+        }
+        v.forEach((val, type) => {
+          obj[type] = val
+        })
+        return obj
+      })
+    const limit = range === "1m" ? 1 : range === "6m" ? 6 : 12
+    return data.slice(-limit) as CategoryData[]
+  }, [filteredRecords, range])
 
   const totals = useMemo(() => {
     return filteredRecords.reduce(
