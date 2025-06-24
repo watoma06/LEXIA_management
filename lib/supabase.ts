@@ -6,3 +6,4 @@ export const supabase = createClient(
 )
 
 export const TABLE_NAME = process.env.NEXT_PUBLIC_SUPABASE_TABLE || 'records'
+export const ITEMS_TABLE = 'items'

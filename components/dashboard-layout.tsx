@@ -10,6 +10,7 @@ import {
   ChevronDown,
   Globe,
   Home,
+  Package,
   LayoutDashboard,
   Settings,
   Wallet,
@@ -53,6 +54,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <Link href="/reports">
                 <Globe className="h-4 w-4" />
                 レポート
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/items">
+                <Package className="h-4 w-4" />
+                品目
               </Link>
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">

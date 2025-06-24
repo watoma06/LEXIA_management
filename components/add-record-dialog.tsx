@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, ChangeEvent } from "react"
+import { useState, useRef, ChangeEvent, useEffect } from "react"
 import Papa from "papaparse"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { DatePicker } from "@/components/date-picker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ACCOUNT_TYPES, AccountType } from "@/lib/accountTypes"
+import { supabase, ITEMS_TABLE } from "@/lib/supabase"
 
 export type NewRecord = {
   category: "Income" | "Expense"
@@ -17,6 +18,7 @@ export type NewRecord = {
   amount: number
   client: string
   item: string
+  item_id: number
   note: string
 }
 
@@ -27,6 +29,7 @@ interface AddRecordDialogProps {
 
 export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   const [open, setOpen] = useState(false)
+  const [items, setItems] = useState<{ id: number; name: string }[]>([])
   const [form, setForm] = useState<NewRecord>({
     category: "Income",
     type: ACCOUNT_TYPES[0],
@@ -34,8 +37,17 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
     amount: 0,
     client: "",
     item: "",
+    item_id: 0,
     note: "",
   })
+
+  useEffect(() => {
+    supabase
+      .from(ITEMS_TABLE)
+      .select('*')
+      .then(({ data }) => setItems(data ?? []))
+      .catch(() => setItems([]))
+  }, [])
 
   const handleChange = (key: keyof NewRecord, value: any) => {
     setForm({ ...form, [key]: value })
@@ -51,6 +63,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
       amount: 0,
       client: "",
       item: "",
+      item_id: 0,
       note: "",
     })
   }
@@ -71,6 +84,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         const records = (results.data as any[]).map((r) => ({
           ...r,
           amount: Number(r.amount),
+          item_id: Number(r.item_id || 0),
         })) as NewRecord[]
         if (onImport) records.length && onImport(records)
         else records.forEach((r) => onAdd(r))
@@ -129,7 +143,26 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         </div>
         <div className="grid gap-2">
           <label className="text-sm">品目</label>
-          <Input value={form.item} onChange={(e) => handleChange("item", e.target.value)} />
+          <Select
+            value={String(form.item_id)}
+            onValueChange={(v) => {
+              const id = Number(v)
+              const item = items.find((i) => i.id === id)
+              handleChange("item_id", id)
+              handleChange("item", item?.name || "")
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="品目" />
+            </SelectTrigger>
+            <SelectContent>
+              {items.map((i) => (
+                <SelectItem key={i.id} value={String(i.id)}>
+                  {i.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="grid gap-2">
           <label className="text-sm">備考</label>
