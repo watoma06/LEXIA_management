@@ -52,12 +52,6 @@ export function MobileNav() {
               レポート
             </Link>
           </Button>
-          <Button asChild variant="ghost" className="w-full justify-start gap-2">
-            <Link href="/items">
-              <Package className="h-4 w-4" />
-              名称
-            </Link>
-          </Button>
           <Button variant="ghost" className="w-full justify-start gap-2">
             <Home className="h-4 w-4" />
             予算

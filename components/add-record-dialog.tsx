@@ -8,12 +8,12 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { DatePicker } from "@/components/date-picker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ACCOUNT_TYPES, AccountType } from "@/lib/accountTypes"
+// Account types are now free text
 import { supabase, ITEMS_TABLE } from "@/lib/supabase"
 
 export type NewRecord = {
   category: "Income" | "Expense"
-  type: AccountType
+  type: string
   date: string
   amount: number
   client: string
@@ -32,7 +32,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   const [items, setItems] = useState<{ id: number; name: string }[]>([])
   const [form, setForm] = useState<NewRecord>({
     category: "Income",
-    type: ACCOUNT_TYPES[0],
+    type: "",
     date: new Date().toISOString().slice(0, 10),
     amount: 0,
     client: "",
@@ -63,7 +63,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
     setOpen(false)
     setForm({
       category: "Income",
-      type: ACCOUNT_TYPES[0],
+      type: "",
       date: new Date().toISOString().slice(0, 10),
       amount: 0,
       client: "",
@@ -121,18 +121,11 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         </div>
         <div className="grid gap-2">
           <label className="text-sm">勘定科目</label>
-          <Select value={form.type} onValueChange={(v) => handleChange("type", v as NewRecord["type"])}>
-            <SelectTrigger>
-              <SelectValue placeholder="勘定科目" />
-            </SelectTrigger>
-            <SelectContent>
-              {ACCOUNT_TYPES.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {type}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Input
+            value={form.type}
+            onChange={(e) => handleChange("type", e.target.value)}
+            placeholder="勘定科目"
+          />
         </div>
         <div className="grid gap-2">
           <label className="text-sm">日付</label>
