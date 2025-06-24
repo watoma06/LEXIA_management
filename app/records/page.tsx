@@ -5,6 +5,7 @@ import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
 import { EditRecordDialog } from "@/components/edit-record-dialog"
 import { supabase, TABLE_NAME } from "@/lib/supabase"
+import DashboardLayout from "@/components/dashboard-layout"
 
 export default function RecordsPage() {
   const [records, setRecords] = useState<RecordItem[]>([])
@@ -54,7 +55,7 @@ export default function RecordsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-6">
+    <DashboardLayout>
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">収入と支出</h1>
         <AddRecordDialog onAdd={handleAdd} onImport={handleImport} />
@@ -76,6 +77,6 @@ export default function RecordsPage() {
           onOpenChange={(v) => !v && setEditing(null)}
         />
       )}
-    </div>
+    </DashboardLayout>
   )
 }
