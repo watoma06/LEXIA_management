@@ -41,9 +41,9 @@ export default function ItemsPage() {
 
   return (
     <DashboardLayout>
-      <h1 className="text-2xl font-bold mb-4">品目管理</h1>
+      <h1 className="text-2xl font-bold mb-4">名称管理</h1>
       <div className="flex gap-2 mb-4">
-        <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="品目名" />
+        <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="名称" />
         <Button onClick={handleAdd}>追加</Button>
       </div>
       <ul className="space-y-2">

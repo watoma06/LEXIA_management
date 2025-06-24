@@ -58,7 +58,7 @@ export function MobileNav() {
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
             <Link href="/items">
               <Package className="h-4 w-4" />
-              品目
+              名称
             </Link>
           </Button>
           <Button variant="ghost" className="w-full justify-start gap-2">
