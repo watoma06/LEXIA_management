@@ -79,13 +79,13 @@ export default function Page() {
   const profitChartData = useMemo(() => {
     const map = new Map<string, number>()
     filteredRecords.forEach((r) => {
-      const key = format(new Date(r.date), "yyyy-MM")
+      const key = format(new Date(r.date), "yyyy")
       const value = r.category === "Income" ? r.amount : -r.amount
       map.set(key, (map.get(key) || 0) + value)
     })
     return Array.from(map.entries())
       .sort(([a], [b]) => (a > b ? 1 : -1))
-      .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
+      .map(([k, v]) => ({ date: `${k}年`, value: v }))
   }, [filteredRecords])
 
   const categoryData = useMemo(() => {
@@ -176,7 +176,7 @@ export default function Page() {
         />
       </div>
       <Card className="mt-6 p-6">
-        <h2 className="text-lg font-semibold mb-4">月別純利益</h2>
+        <h2 className="text-lg font-semibold mb-4">年別純利益</h2>
         <StatsChart data={profitChartData} />
       </Card>
       <Card className="mt-6 p-6">
