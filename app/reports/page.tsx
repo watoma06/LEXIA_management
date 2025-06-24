@@ -9,6 +9,7 @@ import { RecordsTable, RecordItem } from "@/components/vault-table"
 import { DatePicker } from "@/components/date-picker"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import DashboardLayout from "@/components/dashboard-layout"
 import { format } from "date-fns"
 import Papa from "papaparse"
 
@@ -80,7 +81,7 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-6">
+    <DashboardLayout>
       <h1 className="text-2xl font-bold mb-6">レポート</h1>
       <div className="grid gap-4 md:grid-cols-2 mb-6">
         <div className="grid gap-2">
@@ -122,6 +123,6 @@ export default function ReportsPage() {
       <div className="mt-6">
         <RecordsTable records={filteredRecords} />
       </div>
-    </div>
+    </DashboardLayout>
   )
 }
