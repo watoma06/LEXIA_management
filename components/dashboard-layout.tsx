@@ -5,7 +5,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MobileNav } from "@/components/mobile-nav"
-import { ThemeToggle } from "@/components/theme-toggle"
 import {
   BarChart3,
   ChevronDown,
@@ -65,13 +64,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               アカウント
               <ChevronDown className="ml-auto h-4 w-4" />
             </Button>
-            <Button variant="ghost" className="w-full justify-start gap-2">
-              <Settings className="h-4 w-4" />
-              設定
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/settings">
+                <Settings className="h-4 w-4" />
+                設定
+              </Link>
             </Button>
-            <div className="flex justify-center py-2">
-              <ThemeToggle />
-            </div>
           </nav>
         </aside>
         <main className="p-6">{children}</main>
