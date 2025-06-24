@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { DatePicker } from "@/components/date-picker"
@@ -24,12 +26,20 @@ import { format } from "date-fns"
 import { ChevronDown } from "lucide-react"
 
 export default function Page() {
+  const { user } = useAuth()
+  const router = useRouter()
   const [records, setRecords] = useState<RecordItem[]>([])
 
   const [editing, setEditing] = useState<RecordItem | null>(null)
   const [startDate, setStartDate] = useState("2025-01-01")
   const [endDate, setEndDate] = useState(() => new Date().toISOString().slice(0, 10))
   const [range, setRange] = useState<"1y" | "6m" | "1m">("1y")
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login")
+    }
+  }, [user, router])
 
 
   useEffect(() => {
