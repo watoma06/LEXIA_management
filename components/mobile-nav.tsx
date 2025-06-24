@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import LogoutButton from "@/components/LogoutButton"
 import Link from "next/link"
 import {
   Sheet,
@@ -76,6 +77,7 @@ export function MobileNav() {
               設定
             </Link>
           </Button>
+          <LogoutButton />
         </nav>
       </SheetContent>
     </Sheet>
