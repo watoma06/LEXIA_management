@@ -10,6 +10,13 @@ import { DatePicker } from "@/components/date-picker"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import DashboardLayout from "@/components/dashboard-layout"
 import { format } from "date-fns"
 import Papa from "papaparse"
@@ -18,6 +25,7 @@ export default function ReportsPage() {
   const [records, setRecords] = useState<RecordItem[]>([])
   const [startDate, setStartDate] = useState("")
   const [endDate, setEndDate] = useState("")
+  const [range, setRange] = useState<"1y" | "6m" | "1m">("1y")
 
   useEffect(() => {
     supabase
@@ -49,16 +57,23 @@ export default function ReportsPage() {
   }, [filteredRecords])
 
   const profitChartData = useMemo(() => {
+    const sorted = [...filteredRecords].sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    )
     const map = new Map<string, number>()
-    filteredRecords.forEach((r) => {
+    let cumulative = 0
+    sorted.forEach((r) => {
       const key = format(new Date(r.date), "yyyy-MM")
       const value = r.category === "Income" ? r.amount : -r.amount
-      map.set(key, (map.get(key) || 0) + value)
+      cumulative += value
+      map.set(key, cumulative)
     })
-    return Array.from(map.entries())
+    const data = Array.from(map.entries())
       .sort(([a], [b]) => (a > b ? 1 : -1))
       .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
-  }, [filteredRecords])
+    const limit = range === "1m" ? 1 : range === "6m" ? 6 : 12
+    return data.slice(-limit)
+  }, [filteredRecords, range])
 
   const categoryData = useMemo(() => {
     const map = new Map<string, number>()
@@ -98,7 +113,7 @@ export default function ReportsPage() {
   return (
     <DashboardLayout>
       <h1 className="text-2xl font-bold mb-6">レポート</h1>
-      <div className="grid gap-4 md:grid-cols-2 mb-6">
+      <div className="grid gap-4 md:grid-cols-3 mb-6">
         <div className="grid gap-2">
           <label className="text-sm">開始日</label>
           <DatePicker date={startDate} onChange={setStartDate} />
@@ -106,6 +121,19 @@ export default function ReportsPage() {
         <div className="grid gap-2">
           <label className="text-sm">終了日</label>
           <DatePicker date={endDate} onChange={setEndDate} />
+        </div>
+        <div className="grid gap-2">
+          <label className="text-sm">表示範囲</label>
+          <Select value={range} onValueChange={(v) => setRange(v as "1y" | "6m" | "1m") }>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1y">1年</SelectItem>
+              <SelectItem value="6m">半年</SelectItem>
+              <SelectItem value="1m">1ヶ月</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-3">
