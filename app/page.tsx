@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { DatePicker } from "@/components/date-picker"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { MetricsCard } from "@/components/metrics-card"
 import { StatsChart } from "@/components/stats-chart"
 import { CategoryChart } from "@/components/category-chart"
@@ -22,6 +29,7 @@ export default function Page() {
   const [editing, setEditing] = useState<RecordItem | null>(null)
   const [startDate, setStartDate] = useState("2025-01-01")
   const [endDate, setEndDate] = useState(() => new Date().toISOString().slice(0, 10))
+  const [range, setRange] = useState<"1y" | "6m" | "1m">("1y")
 
 
   useEffect(() => {
@@ -77,16 +85,23 @@ export default function Page() {
   }, [records, startDate, endDate])
 
   const profitChartData = useMemo(() => {
+    const sorted = [...filteredRecords].sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    )
     const map = new Map<string, number>()
-    filteredRecords.forEach((r) => {
-      const key = format(new Date(r.date), "yyyy")
+    let cumulative = 0
+    sorted.forEach((r) => {
+      const key = format(new Date(r.date), "yyyy-MM")
       const value = r.category === "Income" ? r.amount : -r.amount
-      map.set(key, (map.get(key) || 0) + value)
+      cumulative += value
+      map.set(key, cumulative)
     })
-    return Array.from(map.entries())
+    const data = Array.from(map.entries())
       .sort(([a], [b]) => (a > b ? 1 : -1))
-      .map(([k, v]) => ({ date: `${k}年`, value: v }))
-  }, [filteredRecords])
+      .map(([k, v]) => ({ date: format(new Date(k + "-01"), "M月"), value: v }))
+    const limit = range === "1m" ? 1 : range === "6m" ? 6 : 12
+    return data.slice(-limit)
+  }, [filteredRecords, range])
 
   const categoryData = useMemo(() => {
     const map = new Map<string, number>()
@@ -146,6 +161,22 @@ export default function Page() {
                 <label className="text-sm">終了日</label>
                 <DatePicker date={endDate} onChange={setEndDate} />
               </div>
+              <div className="grid gap-2">
+                <label className="text-sm">表示範囲</label>
+                <Select
+                  value={range}
+                  onValueChange={(v) => setRange(v as "1y" | "6m" | "1m")}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1y">1年</SelectItem>
+                    <SelectItem value="6m">半年</SelectItem>
+                    <SelectItem value="1m">1ヶ月</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <Button
                 variant="outline"
                 className="w-full"
@@ -176,7 +207,7 @@ export default function Page() {
         />
       </div>
       <Card className="mt-6 p-6">
-        <h2 className="text-lg font-semibold mb-4">年別純利益</h2>
+        <h2 className="text-lg font-semibold mb-4">月別純利益</h2>
         <StatsChart data={profitChartData} />
       </Card>
       <Card className="mt-6 p-6">
