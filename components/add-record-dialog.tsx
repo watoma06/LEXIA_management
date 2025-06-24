@@ -143,26 +143,15 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         </div>
         <div className="grid gap-2">
           <label className="text-sm">品目</label>
-          <Select
-            value={String(form.item_id)}
-            onValueChange={(v) => {
-              const id = Number(v)
-              const item = items.find((i) => i.id === id)
-              handleChange("item_id", id)
-              handleChange("item", item?.name || "")
+          <Input
+            value={form.item}
+            onChange={(e) => {
+              const value = e.target.value
+              handleChange("item", value)
+              const found = items.find((i) => i.name === value)
+              handleChange("item_id", found ? found.id : 0)
             }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="品目" />
-            </SelectTrigger>
-            <SelectContent>
-              {items.map((i) => (
-                <SelectItem key={i.id} value={String(i.id)}>
-                  {i.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          />
         </div>
         <div className="grid gap-2">
           <label className="text-sm">備考</label>
