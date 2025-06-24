@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { supabase, TABLE_NAME } from "@/lib/supabase"
+import { useAuth } from "@/components/auth-provider"
 import { MetricsCard } from "@/components/metrics-card"
 import { StatsChart } from "@/components/stats-chart"
 import { CategoryChart } from "@/components/category-chart"
@@ -16,16 +17,19 @@ import Papa from "papaparse"
 
 export default function ReportsPage() {
   const [records, setRecords] = useState<RecordItem[]>([])
+  const { session } = useAuth()
   const [startDate, setStartDate] = useState("")
   const [endDate, setEndDate] = useState("")
 
   useEffect(() => {
+    if (!session) return
     supabase
       .from(TABLE_NAME)
       .select("*")
+      .eq('user_id', session.user.id)
       .then(({ data }) => setRecords(data ?? []))
       .catch(() => setRecords([]))
-  }, [])
+  }, [session])
 
   const filteredRecords = useMemo(() => {
     return records.filter((r) => {

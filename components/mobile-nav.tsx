@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { supabase } from "@/lib/supabase"
 import {
   Sheet,
   SheetContent,
@@ -72,6 +73,13 @@ export function MobileNav() {
               <Settings className="h-4 w-4" />
               設定
             </Link>
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-2"
+            onClick={() => supabase.auth.signOut()}
+          >
+            ログアウト
           </Button>
         </nav>
       </SheetContent>
