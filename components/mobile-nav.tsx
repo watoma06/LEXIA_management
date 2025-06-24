@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
+import { toast } from "@/hooks/use-toast"
 import {
   Sheet,
   SheetContent,
@@ -77,7 +78,10 @@ export function MobileNav() {
           <Button
             variant="ghost"
             className="w-full justify-start gap-2"
-            onClick={() => supabase.auth.signOut()}
+            onClick={async () => {
+              await supabase.auth.signOut()
+              toast({ title: "ログアウトしました" })
+            }}
           >
             ログアウト
           </Button>

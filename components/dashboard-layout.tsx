@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MobileNav } from "@/components/mobile-nav"
 import { supabase } from "@/lib/supabase"
+import { toast } from "@/hooks/use-toast"
 import {
   BarChart3,
   ChevronDown,
@@ -78,7 +79,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <Button
               variant="ghost"
               className="w-full justify-start gap-2"
-              onClick={() => supabase.auth.signOut()}
+              onClick={async () => {
+                await supabase.auth.signOut()
+                toast({ title: "ログアウトしました" })
+              }}
             >
               ログアウト
             </Button>

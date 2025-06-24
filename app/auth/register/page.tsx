@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase"
+import { toast } from "@/hooks/use-toast"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -17,7 +18,10 @@ export default function RegisterPage() {
     e.preventDefault()
     const { error } = await supabase.auth.signUp({ email, password })
     if (error) setError(error.message)
-    else router.push("/auth/login")
+    else {
+      router.push("/auth/login")
+      toast({ title: "登録が完了しました" })
+    }
   }
 
   return (

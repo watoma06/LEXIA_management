@@ -16,6 +16,7 @@ import { format } from "date-fns"
 import { ChevronDown } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { DatePicker } from "@/components/date-picker"
+import { toast } from "@/hooks/use-toast"
 
 export default function Page() {
   const [records, setRecords] = useState<RecordItem[]>([])
@@ -44,7 +45,10 @@ export default function Page() {
       .insert({ ...record, user_id: session.user.id })
       .select()
       .single()
-    if (data) setRecords((prev) => [...prev, data as RecordItem])
+    if (data) {
+      setRecords((prev) => [...prev, data as RecordItem])
+      toast({ title: "レコードを追加しました" })
+    }
   }
 
   const handleImport = async (records: NewRecord[]) => {
@@ -54,7 +58,10 @@ export default function Page() {
       .from(TABLE_NAME)
       .insert(payload)
       .select()
-    if (data) setRecords((prev) => [...prev, ...(data as RecordItem[])])
+    if (data) {
+      setRecords((prev) => [...prev, ...(data as RecordItem[])])
+      toast({ title: "インポートが完了しました" })
+    }
   }
 
   const handleUpdate = async (updated: RecordItem) => {
@@ -70,6 +77,7 @@ export default function Page() {
       setRecords((prev) =>
         prev.map((r) => (r.id === (data as RecordItem).id ? (data as RecordItem) : r))
       )
+    if (data) toast({ title: "レコードを更新しました" })
   }
 
   const handleDelete = async (id: number) => {
@@ -80,6 +88,7 @@ export default function Page() {
       .eq("id", id)
       .eq('user_id', session.user.id)
     setRecords((prev) => prev.filter((r) => r.id !== id))
+    toast({ title: "レコードを削除しました" })
   }
 
   const filteredRecords = useMemo(() => {
