@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import type { RecordItem } from "./vault-table"
+import { ACCOUNT_TYPES } from "@/lib/accountTypes"
 
 interface EditRecordDialogProps {
   record: RecordItem
@@ -86,9 +87,11 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
               <SelectValue placeholder="勘定科目" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="維持費">維持費</SelectItem>
-              <SelectItem value="制作費">制作費</SelectItem>
-              <SelectItem value="その他">その他</SelectItem>
+              {ACCOUNT_TYPES.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
