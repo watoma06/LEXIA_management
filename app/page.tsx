@@ -51,19 +51,27 @@ export default function Page() {
   }, [])
 
   const handleAdd = async (record: NewRecord) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from(TABLE_NAME)
       .insert(record)
       .select()
       .single()
+    if (error) {
+      console.error('Insert error:', error.message)
+      return
+    }
     if (data) setRecords((prev) => [...prev, data as RecordItem])
   }
 
   const handleImport = async (records: NewRecord[]) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from(TABLE_NAME)
       .insert(records)
       .select()
+    if (error) {
+      console.error('Bulk insert error:', error.message)
+      return
+    }
     if (data) setRecords((prev) => [...prev, ...(data as RecordItem[])])
   }
 

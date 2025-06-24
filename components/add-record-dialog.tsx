@@ -18,7 +18,7 @@ export type NewRecord = {
   amount: number
   client: string
   item: string
-  item_id: number
+  item_id: number | null
   note: string
 }
 
@@ -54,7 +54,12 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   }
 
   const handleSubmit = () => {
-    onAdd({ ...form, amount: Number(form.amount) })
+    const payload = {
+      ...form,
+      amount: Number(form.amount),
+      item_id: form.item_id || null,
+    }
+    onAdd(payload)
     setOpen(false)
     setForm({
       category: "Income",
@@ -84,7 +89,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         const records = (results.data as any[]).map((r) => ({
           ...r,
           amount: Number(r.amount),
-          item_id: Number(r.item_id || 0),
+          item_id: r.item_id ? Number(r.item_id) : null,
         })) as NewRecord[]
         if (onImport) records.length && onImport(records)
         else records.forEach((r) => onAdd(r))
