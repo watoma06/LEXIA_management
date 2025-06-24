@@ -42,4 +42,4 @@ Bulk import expects a CSV file with the following header columns:
 category,type,date,amount,client,item,item_id,note
 \`\`\`
 
-`category` should be either `Income` or `Expense`, `type` should be one of the account titles defined in `lib/accountTypes.ts` (e.g. `売上高`, `仕入高`, `旅費交通費`), and `date` must be in `YYYY-MM-DD` format. `amount` should be a number. `item_id` corresponds to the ID from the `items` table.
+`category` should be either `Income` or `Expense`. The `type` column accepts any text value representing the account title. `date` must be in `YYYY-MM-DD` format and `amount` should be a number. `item_id` corresponds to the ID from the `items` table.
