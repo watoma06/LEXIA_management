@@ -2,6 +2,7 @@ import "./globals.css"
 import { Inter } from "next/font/google"
 import type React from "react" // Import React
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -15,6 +16,7 @@ export default function RootLayout({
       <body className={`${inter.className} overflow-x-hidden`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

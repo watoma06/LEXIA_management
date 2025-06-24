@@ -11,6 +11,7 @@ import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
 import { EditRecordDialog } from "@/components/edit-record-dialog"
 import DashboardLayout from "@/components/dashboard-layout"
 import { supabase, TABLE_NAME } from "@/lib/supabase"
+import { toast } from "@/hooks/use-toast"
 import { format } from "date-fns"
 import { ChevronDown } from "lucide-react"
 
@@ -33,7 +34,10 @@ export default function Page() {
       .insert(record)
       .select()
       .single()
-    if (data) setRecords((prev) => [...prev, data as RecordItem])
+    if (data) {
+      setRecords((prev) => [...prev, data as RecordItem])
+      toast({ title: "レコードを追加しました" })
+    }
   }
 
   const handleImport = async (records: NewRecord[]) => {
@@ -41,7 +45,10 @@ export default function Page() {
       .from(TABLE_NAME)
       .insert(records)
       .select()
-    if (data) setRecords((prev) => [...prev, ...(data as RecordItem[])])
+    if (data) {
+      setRecords((prev) => [...prev, ...(data as RecordItem[])])
+      toast({ title: "レコードをインポートしました" })
+    }
   }
 
   const handleUpdate = async (updated: RecordItem) => {
@@ -51,15 +58,18 @@ export default function Page() {
       .eq("id", updated.id)
       .select()
       .single()
-    if (data)
+    if (data) {
       setRecords((prev) =>
         prev.map((r) => (r.id === (data as RecordItem).id ? (data as RecordItem) : r))
       )
+      toast({ title: "レコードを更新しました" })
+    }
   }
 
   const handleDelete = async (id: number) => {
     await supabase.from(TABLE_NAME).delete().eq("id", id)
     setRecords((prev) => prev.filter((r) => r.id !== id))
+    toast({ title: "レコードを削除しました" })
   }
 
   const profitChartData = useMemo(() => {

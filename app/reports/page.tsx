@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import DashboardLayout from "@/components/dashboard-layout"
 import { format } from "date-fns"
 import Papa from "papaparse"
+import { toast } from "@/hooks/use-toast"
 
 export default function ReportsPage() {
   const [records, setRecords] = useState<RecordItem[]>([])
@@ -93,6 +94,7 @@ export default function ReportsPage() {
     a.download = "records.csv"
     a.click()
     URL.revokeObjectURL(url)
+    toast({ title: "CSVをダウンロードしました" })
   }
 
   return (
