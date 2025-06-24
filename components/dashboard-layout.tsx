@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MobileNav } from "@/components/mobile-nav"
+import LogoutButton from "@/components/LogoutButton"
 import {
   BarChart3,
   ChevronDown,
@@ -77,6 +78,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 設定
               </Link>
             </Button>
+            <div className="px-2 mt-2">
+              <LogoutButton />
+            </div>
           </nav>
         </aside>
         <main className="p-6">{children}</main>
