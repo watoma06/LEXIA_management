@@ -159,11 +159,11 @@ export default function ReportsPage() {
         <CategoryChart data={categoryData} />
       </Card>
       <Card className="mt-6 p-6">
-        <h2 className="text-lg font-semibold mb-4">品目別損益</h2>
+        <h2 className="text-lg font-semibold mb-4">名称別損益</h2>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>品目</TableHead>
+              <TableHead>名称</TableHead>
               <TableHead className="text-right">損益</TableHead>
             </TableRow>
           </TableHeader>

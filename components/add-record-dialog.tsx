@@ -142,7 +142,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
           <Input value={form.client} onChange={(e) => handleChange("client", e.target.value)} />
         </div>
         <div className="grid gap-2">
-          <label className="text-sm">品目</label>
+          <label className="text-sm">名称</label>
           <Input
             value={form.item}
             onChange={(e) => {

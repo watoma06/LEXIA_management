@@ -140,7 +140,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
           </TableHead>
           <TableHead onClick={() => handleSort("item")}
             className="cursor-pointer select-none">
-            品目
+            名称
             {sortConfig?.key === "item" && (
               sortConfig.direction === "asc" ? (
                 <ChevronUp className="inline h-3 w-3" />
@@ -292,7 +292,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
               <span>{record.client}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-sm text-muted-foreground">品目</span>
+              <span className="text-sm text-muted-foreground">名称</span>
               <span>{record.item}</span>
             </div>
             <div className="flex justify-between">
