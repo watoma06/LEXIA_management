@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 
-export default function LoginPage() {
-  const { signIn } = useAuth()
+export default function SignUpPage() {
+  const { signUp } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -16,7 +16,7 @@ export default function LoginPage() {
     e.preventDefault()
     setError(null)
     try {
-      await signIn(email, password)
+      await signUp(email, password)
     } catch (err: any) {
       setError(err.message)
     }
@@ -39,10 +39,10 @@ export default function LoginPage() {
           placeholder="Password"
           required
         />
-        <Button type="submit" className="w-full">Login</Button>
+        <Button type="submit" className="w-full">Sign Up</Button>
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <p className="text-sm text-center">
-          アカウントをお持ちでないですか？ <Link href="/signup" className="underline">新規登録</Link>
+          すでにアカウントをお持ちですか？ <Link href="/login" className="underline">ログイン</Link>
         </p>
       </form>
     </div>
