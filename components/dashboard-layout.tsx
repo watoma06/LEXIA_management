@@ -3,8 +3,8 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { MobileNav } from "@/components/mobile-nav"
-import { supabase } from "@/lib/supabase"
 import {
   BarChart3,
   ChevronDown,
@@ -34,7 +34,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <Wallet className="h-6 w-6" />
             <span className="font-bold">LEXIAファイナンス</span>
           </div>
-          {/* Search input removed */}
+          <div className="px-4 py-4">
+            <Input placeholder="検索" className="bg-background/50" />
+          </div>
           <nav className="space-y-2 px-2">
             <Button asChild variant="ghost" className="w-full justify-start gap-2">
               <Link href="/">
@@ -74,13 +76,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Settings className="h-4 w-4" />
                 設定
               </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start gap-2"
-              onClick={() => supabase.auth.signOut()}
-            >
-              ログアウト
             </Button>
           </nav>
         </aside>
