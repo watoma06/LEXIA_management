@@ -35,7 +35,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
   const [sortConfig, setSortConfig] = useState<{
     key: keyof RecordItem
     direction: "asc" | "desc"
-  } | null>(null)
+  }>({ key: "date", direction: "desc" })
 
   const sortedRecords = useMemo(() => {
     if (!sortConfig) return records
