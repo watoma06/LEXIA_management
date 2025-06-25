@@ -245,8 +245,16 @@ export default function Page() {
         />
       </div>
       <Card className="mt-6 p-6">
-        <h2 className="text-lg font-semibold mb-4">月別純利益</h2>
-        <StatsChart data={profitChartData} />
+        <Accordion type="single" collapsible defaultValue="profit">
+          <AccordionItem value="profit">
+            <AccordionTrigger className="text-lg font-semibold">
+              月別純利益
+            </AccordionTrigger>
+            <AccordionContent>
+              <StatsChart data={profitChartData} />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </Card>
       <Card className="mt-6 p-6">
         <Accordion type="single" collapsible>
