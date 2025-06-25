@@ -1,6 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MobileNav } from "@/components/mobile-nav"
@@ -12,6 +13,7 @@ import {
   Home,
   Package,
   LayoutDashboard,
+  PanelLeft,
   Settings,
   Wallet,
 } from "lucide-react"
@@ -21,16 +23,42 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {!sidebarOpen && (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setSidebarOpen(true)}
+          className="absolute left-2 top-2 z-20 hidden lg:inline-flex"
+        >
+          <PanelLeft className="h-6 w-6" />
+          <span className="sr-only">Open Sidebar</span>
+        </Button>
+      )}
       <header className="flex items-center h-16 gap-2 border-b px-4 lg:hidden">
         <MobileNav />
         <Wallet className="h-6 w-6" />
         <span className="font-bold">LEXIA Finance</span>
       </header>
-      <div className="grid lg:grid-cols-[280px_1fr]">
+      <div
+        className="grid transition-[grid-template-columns] duration-200"
+        style={{ gridTemplateColumns: sidebarOpen ? "280px 1fr" : "1fr" }}
+      >
+        {sidebarOpen && (
         <aside className="hidden border-r bg-background/50 backdrop-blur lg:block">
           <div className="flex h-16 items-center gap-2 border-b px-6">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarOpen(false)}
+              className="hidden lg:inline-flex mr-2"
+            >
+              <PanelLeft className="h-4 w-4" />
+              <span className="sr-only">Close Sidebar</span>
+            </Button>
             <Wallet className="h-6 w-6" />
             <span className="font-bold">LEXIAファイナンス</span>
           </div>
@@ -73,6 +101,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
           </nav>
         </aside>
+        )}
         <main className="p-6">{children}</main>
       </div>
     </div>
