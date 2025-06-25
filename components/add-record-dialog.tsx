@@ -114,8 +114,12 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
               <SelectValue placeholder="カテゴリ" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Income">収入</SelectItem>
-              <SelectItem value="Expense">支出</SelectItem>
+              <SelectItem value="Income" className="text-green-500">
+                収入
+              </SelectItem>
+              <SelectItem value="Expense" className="text-red-500">
+                支出
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

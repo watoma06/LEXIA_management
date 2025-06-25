@@ -176,7 +176,13 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
                 )
               }
             >
-              {record.category === "Income" ? "収入" : "支出"}
+              <span
+                className={
+                  record.category === "Income" ? "text-green-500" : "text-red-500"
+                }
+              >
+                {record.category === "Income" ? "収入" : "支出"}
+              </span>
             </TableCell>
             <TableCell
               contentEditable
@@ -264,7 +270,13 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
           <Card key={record.id} className="p-4 space-y-2">
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">カテゴリ</span>
-              <span>{record.category === "Income" ? "収入" : "支出"}</span>
+              <span
+                className={
+                  record.category === "Income" ? "text-green-500" : "text-red-500"
+                }
+              >
+                {record.category === "Income" ? "収入" : "支出"}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">勘定科目</span>
