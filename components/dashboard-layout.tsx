@@ -16,6 +16,7 @@ import {
   PanelLeft,
   Settings,
   Wallet,
+  Calculator,
 } from "lucide-react"
 
 interface DashboardLayoutProps {
@@ -84,6 +85,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <Link href="/reports">
                 <Globe className="h-4 w-4" />
                 レポート
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/calculator">
+                <Calculator className="h-4 w-4" />
+                電卓
               </Link>
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
