@@ -89,6 +89,20 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
     }
   }
 
+  const handleConvert = async () => {
+    try {
+      const res = await fetch("https://open.er-api.com/v6/latest/USD")
+      const data = await res.json()
+      const rate = data?.rates?.JPY
+      const amt = parseFloat(String(form.amount))
+      if (rate && !isNaN(amt)) {
+        handleChange("amount", (amt * rate).toFixed(2))
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -154,7 +168,10 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         </div>
         <div className="grid gap-2">
           <label className="text-sm">金額</label>
-          <Input type="number" value={form.amount} onChange={(e) => handleChange("amount", e.target.value)} />
+          <div className="flex items-center gap-2">
+            <Input type="number" value={form.amount} onChange={(e) => handleChange("amount", e.target.value)} />
+            <Button type="button" variant="outline" onClick={handleConvert}>ドル→円</Button>
+          </div>
           <div className="flex items-center gap-2 mt-1">
             <Input
               type="number"
