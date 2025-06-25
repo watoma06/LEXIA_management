@@ -19,7 +19,7 @@ export type NewRecord = {
   client: string
   item: string
   item_id: number | null
-  note: string
+  notes: string
 }
 
 interface AddRecordDialogProps {
@@ -38,7 +38,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
     client: "",
     item: "",
     item_id: 0,
-    note: "",
+    notes: "",
   })
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
       client: "",
       item: "",
       item_id: 0,
-      note: "",
+      notes: "",
     })
   }
 
@@ -160,7 +160,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         </div>
         <div className="grid gap-2">
           <label className="text-sm">備考</label>
-          <Textarea value={form.note} onChange={(e) => handleChange("note", e.target.value)} />
+          <Textarea value={form.notes} onChange={(e) => handleChange("notes", e.target.value)} />
         </div>
         <DialogFooter className="flex gap-2">
           <input

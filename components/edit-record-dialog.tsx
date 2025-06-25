@@ -131,7 +131,7 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
         </div>
         <div className="grid gap-2">
           <label className="text-sm">備考</label>
-          <Textarea value={form.note} onChange={(e) => handleChange("note", e.target.value)} />
+          <Textarea value={form.notes} onChange={(e) => handleChange("notes", e.target.value)} />
         </div>
         <DialogFooter>
           <Button onClick={handleSubmit}>保存</Button>
