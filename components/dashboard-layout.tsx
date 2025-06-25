@@ -44,8 +44,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <span className="font-bold">LEXIA会計システム</span>
       </header>
       <div
-        className="grid transition-[grid-template-columns] duration-200"
-        style={{ gridTemplateColumns: sidebarOpen ? "280px 1fr" : "1fr" }}
+        className={`grid transition-[grid-template-columns] duration-200 [grid-template-columns:1fr] ${
+          sidebarOpen
+            ? "lg:[grid-template-columns:280px_1fr]"
+            : "lg:[grid-template-columns:1fr]"
+        }`}
       >
         {sidebarOpen && (
         <aside className="hidden border-r bg-background/50 backdrop-blur lg:block">
