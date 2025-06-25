@@ -74,20 +74,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </Link>
             </Button>
             <Button asChild variant="ghost" className="w-full justify-start gap-2">
-              <Link href="/records">
-                <BarChart3 className="h-4 w-4" />
-                <span className="text-green-500">収入</span>
-                と
-                <span className="text-red-500">支出</span>
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" className="w-full justify-start gap-2">
-              <Link href="/reports">
-                <Globe className="h-4 w-4" />
-                レポート
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" className="w-full justify-start gap-2">
               <Link href="/calculator">
                 <Calculator className="h-4 w-4" />
                 電卓
