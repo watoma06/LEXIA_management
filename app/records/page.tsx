@@ -65,7 +65,10 @@ export default function RecordsPage() {
   return (
     <DashboardLayout>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">収入と支出</h1>
+        <h1 className="text-2xl font-bold">
+          <span className="text-green-500">収入</span>と
+          <span className="text-red-500">支出</span>
+        </h1>
         <AddRecordDialog onAdd={handleAdd} onImport={handleImport} />
       </div>
       <RecordsTable

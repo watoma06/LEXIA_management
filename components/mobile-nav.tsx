@@ -43,7 +43,9 @@ export function MobileNav() {
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
             <Link href="/records">
               <BarChart3 className="h-4 w-4" />
-              収入と支出
+              <span className="text-green-500">収入</span>
+              と
+              <span className="text-red-500">支出</span>
             </Link>
           </Button>
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
