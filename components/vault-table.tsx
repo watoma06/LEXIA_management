@@ -21,7 +21,7 @@ export type RecordItem = {
   client: string
   item: string
   item_id: number
-  notes: string
+  note: string
 }
 
 interface RecordsTableProps {
@@ -35,7 +35,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
   const [sortConfig, setSortConfig] = useState<{
     key: keyof RecordItem
     direction: "asc" | "desc"
-  }>({ key: "date", direction: "desc" })
+  } | null>(null)
 
   const sortedRecords = useMemo(() => {
     if (!sortConfig) return records
@@ -148,10 +148,10 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
               )
             )}
           </TableHead>
-          <TableHead onClick={() => handleSort("notes")}
+          <TableHead onClick={() => handleSort("note")}
             className="cursor-pointer select-none">
             備考
-            {sortConfig?.key === "notes" && (
+            {sortConfig?.key === "note" && (
               sortConfig.direction === "asc" ? (
                 <ChevronUp className="inline h-3 w-3" />
               ) : (
@@ -176,13 +176,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
                 )
               }
             >
-              <span
-                className={
-                  record.category === "Income" ? "text-green-500" : "text-red-500"
-                }
-              >
-                {record.category === "Income" ? "収入" : "支出"}
-              </span>
+              {record.category === "Income" ? "収入" : "支出"}
             </TableCell>
             <TableCell
               contentEditable
@@ -238,10 +232,10 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
               contentEditable
               suppressContentEditableWarning
               onBlur={(e) =>
-                handleBlur(record.id, "notes", e.currentTarget.textContent || "")
+                handleBlur(record.id, "note", e.currentTarget.textContent || "")
               }
             >
-              {record.notes}
+              {record.note}
             </TableCell>
             <TableCell className="text-right">
               <DropdownMenu>
@@ -270,13 +264,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
           <Card key={record.id} className="p-4 space-y-2">
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">カテゴリ</span>
-              <span
-                className={
-                  record.category === "Income" ? "text-green-500" : "text-red-500"
-                }
-              >
-                {record.category === "Income" ? "収入" : "支出"}
-              </span>
+              <span>{record.category === "Income" ? "収入" : "支出"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">勘定科目</span>
@@ -308,7 +296,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">備考</span>
-              <span>{record.notes}</span>
+              <span>{record.note}</span>
             </div>
             <div className="text-right">
               <DropdownMenu>

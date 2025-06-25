@@ -1,4 +1,4 @@
-# LEXIA会計システム
+# LEXIA Finance Dashboard
 
 *Automatically synced with your [v0.dev](https://v0.dev) deployments*
 
@@ -39,7 +39,7 @@ This project now stores records in Supabase. Create a `.env.local` file based on
 Bulk import expects a CSV file with the following header columns:
 
 \`\`\`
-category,type,date,amount,client,item,item_id,notes
+category,type,date,amount,client,item,item_id,note
 \`\`\`
 
 `category` should be either `Income` or `Expense`. The `type` column accepts any text value representing the account title. `date` must be in `YYYY-MM-DD` format and `amount` should be a number. `item_id` corresponds to the ID from the `items` table.

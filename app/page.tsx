@@ -18,12 +18,6 @@ import { MetricsCard } from "@/components/metrics-card"
 import { StatsChart, ChartDataItem } from "@/components/stats-chart"
 import { CategoryChart, CategoryData } from "@/components/category-chart"
 import { RecordsTable, RecordItem } from "@/components/vault-table"
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
 import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
 import { EditRecordDialog } from "@/components/edit-record-dialog"
 import DashboardLayout from "@/components/dashboard-layout"
@@ -228,6 +222,7 @@ export default function Page() {
               </Button>
             </PopoverContent>
           </Popover>
+          <AddRecordDialog onAdd={handleAdd} onImport={handleImport} />
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-3">
@@ -245,32 +240,13 @@ export default function Page() {
         />
       </div>
       <Card className="mt-6 p-6">
-        <Accordion type="single" collapsible defaultValue="profit">
-          <AccordionItem value="profit">
-            <AccordionTrigger className="text-lg font-semibold">
-              月別純利益
-            </AccordionTrigger>
-            <AccordionContent>
-              <StatsChart data={profitChartData} />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        <h2 className="text-lg font-semibold mb-4">月別純利益</h2>
+        <StatsChart data={profitChartData} />
       </Card>
       <Card className="mt-6 p-6">
-        <Accordion type="single" collapsible>
-          <AccordionItem value="category">
-            <AccordionTrigger className="text-lg font-semibold">
-              勘定科目別支出割合
-            </AccordionTrigger>
-            <AccordionContent>
-              <CategoryChart data={categoryData} />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        <h2 className="text-lg font-semibold mb-4">勘定科目別支出割合</h2>
+        <CategoryChart data={categoryData} />
       </Card>
-      <div className="mt-6">
-        <AddRecordDialog onAdd={handleAdd} onImport={handleImport} />
-      </div>
       <div className="mt-6">
         <RecordsTable
           records={filteredRecords}
