@@ -40,6 +40,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
     item_id: 0,
     notes: "",
   })
+  const [percentage, setPercentage] = useState("")
 
   useEffect(() => {
     supabase
@@ -77,6 +78,15 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
 
   const handleImportClick = () => {
     fileInputRef.current?.click()
+  }
+
+  const handleCalculate = () => {
+    const pct = parseFloat(percentage)
+    const amt = parseFloat(String(form.amount))
+    if (!isNaN(pct) && !isNaN(amt)) {
+      const result = amt * (pct / 100)
+      handleChange("amount", result)
+    }
   }
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -145,6 +155,19 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         <div className="grid gap-2">
           <label className="text-sm">金額</label>
           <Input type="number" value={form.amount} onChange={(e) => handleChange("amount", e.target.value)} />
+          <div className="flex items-center gap-2 mt-1">
+            <Input
+              type="number"
+              value={percentage}
+              onChange={(e) => setPercentage(e.target.value)}
+              className="w-20"
+              placeholder="0"
+            />
+            <span>%</span>
+            <Button type="button" variant="outline" onClick={handleCalculate}>
+              計算
+            </Button>
+          </div>
         </div>
         <div className="grid gap-2">
           <label className="text-sm">相手先／クライアント</label>
