@@ -1,4 +1,4 @@
-# LEXIA Finance Dashboard
+# LEXIA会計システム
 
 *Automatically synced with your [v0.dev](https://v0.dev) deployments*
 
