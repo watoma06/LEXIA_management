@@ -21,7 +21,7 @@ export type RecordItem = {
   client: string
   item: string
   item_id: number
-  note: string
+  notes: string
 }
 
 interface RecordsTableProps {
@@ -148,10 +148,10 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
               )
             )}
           </TableHead>
-          <TableHead onClick={() => handleSort("note")}
+          <TableHead onClick={() => handleSort("notes")}
             className="cursor-pointer select-none">
             備考
-            {sortConfig?.key === "note" && (
+            {sortConfig?.key === "notes" && (
               sortConfig.direction === "asc" ? (
                 <ChevronUp className="inline h-3 w-3" />
               ) : (
@@ -232,10 +232,10 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
               contentEditable
               suppressContentEditableWarning
               onBlur={(e) =>
-                handleBlur(record.id, "note", e.currentTarget.textContent || "")
+                handleBlur(record.id, "notes", e.currentTarget.textContent || "")
               }
             >
-              {record.note}
+              {record.notes}
             </TableCell>
             <TableCell className="text-right">
               <DropdownMenu>
@@ -296,7 +296,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">備考</span>
-              <span>{record.note}</span>
+              <span>{record.notes}</span>
             </div>
             <div className="text-right">
               <DropdownMenu>
