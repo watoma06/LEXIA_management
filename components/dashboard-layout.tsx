@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           variant="ghost"
           size="icon"
           onClick={() => setSidebarOpen(true)}
-          className="absolute left-2 top-2 z-20 hidden lg:inline-flex"
+          className="absolute left-6 top-6 z-20 hidden lg:inline-flex"
         >
           <PanelLeft className="h-6 w-6" />
           <span className="sr-only">Open Sidebar</span>
@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <header className="flex items-center h-16 gap-2 border-b px-4 lg:hidden">
         <MobileNav />
         <Wallet className="h-6 w-6" />
-        <span className="font-bold">LEXIA Finance</span>
+        <span className="font-bold">LEXIA会計システム</span>
       </header>
       <div
         className="grid transition-[grid-template-columns] duration-200"
@@ -60,7 +60,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="sr-only">Close Sidebar</span>
             </Button>
             <Wallet className="h-6 w-6" />
-            <span className="font-bold">LEXIAファイナンス</span>
+            <span className="font-bold">LEXIA会計システム</span>
           </div>
           <nav className="space-y-2 px-2">
             <Button asChild variant="ghost" className="w-full justify-start gap-2">

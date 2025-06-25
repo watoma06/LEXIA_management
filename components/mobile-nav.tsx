@@ -31,7 +31,7 @@ export function MobileNav() {
       <SheetContent side="left" className="w-64 p-0">
         <div className="flex h-16 items-center gap-2 border-b px-6">
           <Wallet className="h-6 w-6" />
-          <span className="font-bold">LEXIAファイナンス</span>
+          <span className="font-bold">LEXIA会計システム</span>
         </div>
         <nav className="space-y-2 px-2">
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
