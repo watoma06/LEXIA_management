@@ -127,7 +127,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
       <DialogTrigger asChild>
         <Button variant="outline">追加</Button>
       </DialogTrigger>
-      <DialogContent className="space-y-4">
+      <DialogContent className="space-y-4 max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>新規レコード追加</DialogTitle>
         </DialogHeader>

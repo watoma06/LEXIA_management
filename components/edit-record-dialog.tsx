@@ -98,7 +98,7 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
       }}
     >
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="space-y-4">
+      <DialogContent className="space-y-4 max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>レコード編集</DialogTitle>
         </DialogHeader>
