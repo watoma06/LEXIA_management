@@ -139,6 +139,34 @@ export default function KgiKpiPage() {
     })
   }, [records, currentYear])
 
+  const monthlySummary = useMemo(() => {
+    return Array.from({ length: 12 }, (_, i) => {
+      const month = i + 1
+      const income = records
+        .filter(
+          (r) =>
+            r.category === "Income" &&
+            new Date(r.date).getFullYear() === currentYear &&
+            new Date(r.date).getMonth() + 1 === month
+        )
+        .reduce((sum, r) => sum + r.amount, 0)
+      const expense = records
+        .filter(
+          (r) =>
+            r.category === "Expense" &&
+            new Date(r.date).getFullYear() === currentYear &&
+            new Date(r.date).getMonth() + 1 === month
+        )
+        .reduce((sum, r) => sum + r.amount, 0)
+      return {
+        month: `${month}月`,
+        income,
+        expense,
+        profit: income - expense,
+      }
+    })
+  }, [records, currentYear])
+
   const projects = useMemo(() => {
     const map = new Map<
       string,
@@ -322,6 +350,40 @@ export default function KgiKpiPage() {
             </CardContent>
           </Card>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>月別収支表</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>月</TableHead>
+                  <TableHead className="text-right">収入</TableHead>
+                  <TableHead className="text-right">支出</TableHead>
+                  <TableHead className="text-right">利益</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {monthlySummary.map((m) => (
+                  <TableRow key={m.month}>
+                    <TableCell>{m.month}</TableCell>
+                    <TableCell className="text-right">
+                      ¥{m.income.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      ¥{m.expense.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      ¥{m.profit.toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>
