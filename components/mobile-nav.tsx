@@ -47,6 +47,12 @@ export function MobileNav() {
               電卓
             </Link>
           </Button>
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link href="/kgi-kpi">
+              <BarChart3 className="h-4 w-4" />
+              KGI/KPI
+            </Link>
+          </Button>
           <Button variant="ghost" className="w-full justify-start gap-2">
             <Home className="h-4 w-4" />
             予算
