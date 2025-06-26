@@ -1,45 +1,43 @@
 # LEXIA会計システム
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+*[v0.dev](https://v0.dev) デプロイメントと自動同期*
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/watoma06s-projects/v0-crypto-dashboard)
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/Yg4kEUMeMZ8)
 
-## Overview
+## 概要
 
-LEXIA Finance Dashboard is a simple web application for tracking income and expenses. The project was generated using [v0.dev](https://v0.dev) and serves as a starting point for managing financial records and visualising cash flow.
+LEXIA会計ダッシュボードは、収入と支出を管理するためのシンプルなウェブアプリケーションです。このプロジェクトは[v0.dev](https://v0.dev)を使用して生成され、財務記録の管理とキャッシュフローの可視化のためのスタートポイントとして機能します。
 
-## Deployment
+## デプロイメント
 
-Your project is live at:
+あなたのプロジェクトは以下のURLで公開されています：
 
 **[https://vercel.com/watoma06s-projects/v0-crypto-dashboard](https://vercel.com/watoma06s-projects/v0-crypto-dashboard)**
 
-## Build your app
+## アプリの構築
 
-Continue building your app on:
+以下のURLでアプリの構築を続けてください：
 
 **[https://v0.dev/chat/projects/Yg4kEUMeMZ8](https://v0.dev/chat/projects/Yg4kEUMeMZ8)**
 
-## How It Works
+## 動作原理
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+1. [v0.dev](https://v0.dev)を使用してプロジェクトを作成・修正
+2. v0インターフェースからチャットをデプロイ
+3. 変更内容が自動的にこのリポジトリにプッシュされる
+4. Vercelがこのリポジトリから最新バージョンをデプロイする
 
-## Supabase Configuration
+## Supabase設定
 
-This project now stores records in Supabase. Create a `.env.local` file based on
-`.env.example` and provide your `NEXT_PUBLIC_SUPABASE_URL` and
-`NEXT_PUBLIC_SUPABASE_ANON_KEY` values.
+このプロジェクトはSupabaseにレコードを保存します。`.env.example`を基に`.env.local`ファイルを作成し、`NEXT_PUBLIC_SUPABASE_URL`と`NEXT_PUBLIC_SUPABASE_ANON_KEY`の値を設定してください。
 
-## CSV Import Format
+## CSVインポート形式
 
-Bulk import expects a CSV file with the following header columns:
+一括インポートでは、以下のヘッダー列を持つCSVファイルが必要です：
 
 \`\`\`
 category,type,date,amount,client,item,item_id,notes
 \`\`\`
 
-`category` should be either `Income` or `Expense`. The `type` column accepts any text value representing the account title. `date` must be in `YYYY-MM-DD` format and `amount` should be a number. `item_id` corresponds to the ID from the `items` table.
+`category`は`Income`（収入）または`Expense`（支出）のいずれかにしてください。`type`列は勘定科目を表す任意のテキスト値を受け付けます。`date`は`YYYY-MM-DD`形式である必要があり、`amount`は数値にしてください。`item_id`は`items`テーブルのIDに対応します。
