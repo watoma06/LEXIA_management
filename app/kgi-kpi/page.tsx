@@ -25,70 +25,214 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts"
+import { useEffect, useMemo, useState } from "react"
+import { supabase, TABLE_NAME } from "@/lib/supabase"
+import { RecordItem } from "@/components/vault-table"
 
 export default function KgiKpiPage() {
+  const [records, setRecords] = useState<RecordItem[]>([])
+
+  useEffect(() => {
+    supabase
+      .from(TABLE_NAME)
+      .select("*")
+      .then(({ data }) => setRecords(data ?? []))
+      .catch(() => setRecords([]))
+  }, [])
+
   const kgiTarget = 1500000
-  const kgiCurrent = 900000
+
+  const currentYear = new Date().getFullYear()
+
+  const kgiCurrent = useMemo(() => {
+    return records
+      .filter(
+        (r) =>
+          r.category === "Income" &&
+          new Date(r.date).getFullYear() === currentYear
+      )
+      .reduce((sum, r) => sum + r.amount, 0)
+  }, [records, currentYear])
+
   const kgiPercent = Math.round((kgiCurrent / kgiTarget) * 100)
   const remaining = kgiTarget - kgiCurrent
 
-  const kpiTarget = 1
-  const kpiCompleted = 0.6
+  const uniqueItems = useMemo(() => {
+    return new Set(records.map((r) => r.item_id || r.item)).size
+  }, [records])
+
+  const completedItems = useMemo(() => {
+    return new Set(
+      records
+        .filter((r) => r.category === "Income")
+        .map((r) => r.item_id || r.item)
+    ).size
+  }, [records])
+
+  const kpiTarget = uniqueItems || 1
+  const kpiCompleted = completedItems
   const kpiInProgress = kpiTarget - kpiCompleted
+  const kpiCompletedRatio = kpiTarget ? kpiCompleted / kpiTarget : 0
+  const kpiInProgressRatio = kpiTarget ? kpiInProgress / kpiTarget : 0
   const kpiData = [
-    { name: "完了", value: kpiCompleted },
-    { name: "進行中", value: kpiInProgress },
+    { name: "完了", value: kpiCompletedRatio },
+    { name: "進行中", value: kpiInProgressRatio },
   ]
 
-  const monthlySales = [
-    { month: "1月", thisYear: 120, lastYear: 100 },
-    { month: "2月", thisYear: 150, lastYear: 130 },
-    { month: "3月", thisYear: 200, lastYear: 160 },
-    { month: "4月", thisYear: 180, lastYear: 170 },
-    { month: "5月", thisYear: 220, lastYear: 210 },
-    { month: "6月", thisYear: 250, lastYear: 230 },
-  ]
+  const monthlySales = useMemo(() => {
+    const lastYear = currentYear - 1
+    return Array.from({ length: 12 }, (_, i) => {
+      const month = i + 1
+      const thisYear = records
+        .filter(
+          (r) =>
+            r.category === "Income" &&
+            new Date(r.date).getFullYear() === currentYear &&
+            new Date(r.date).getMonth() + 1 === month
+        )
+        .reduce((sum, r) => sum + r.amount, 0)
+      const lastYearVal = records
+        .filter(
+          (r) =>
+            r.category === "Income" &&
+            new Date(r.date).getFullYear() === lastYear &&
+            new Date(r.date).getMonth() + 1 === month
+        )
+        .reduce((sum, r) => sum + r.amount, 0)
+      return {
+        month: `${month}月`,
+        thisYear,
+        lastYear: lastYearVal,
+      }
+    })
+  }, [records, currentYear])
 
-  const monthlyProjects = [
-    { month: "1月", thisYear: 1, lastYear: 0 },
-    { month: "2月", thisYear: 0, lastYear: 1 },
-    { month: "3月", thisYear: 1, lastYear: 0 },
-    { month: "4月", thisYear: 1, lastYear: 1 },
-    { month: "5月", thisYear: 0, lastYear: 1 },
-    { month: "6月", thisYear: 1, lastYear: 0 },
-  ]
+  const monthlyProjects = useMemo(() => {
+    const lastYear = currentYear - 1
+    return Array.from({ length: 12 }, (_, i) => {
+      const month = i + 1
+      const thisYear = new Set(
+        records
+          .filter(
+            (r) =>
+              r.category === "Income" &&
+              new Date(r.date).getFullYear() === currentYear &&
+              new Date(r.date).getMonth() + 1 === month
+          )
+          .map((r) => r.item_id || r.item)
+      ).size
+      const lastYearVal = new Set(
+        records
+          .filter(
+            (r) =>
+              r.category === "Income" &&
+              new Date(r.date).getFullYear() === lastYear &&
+              new Date(r.date).getMonth() + 1 === month
+          )
+          .map((r) => r.item_id || r.item)
+      ).size
+      return {
+        month: `${month}月`,
+        thisYear,
+        lastYear: lastYearVal,
+      }
+    })
+  }, [records, currentYear])
 
-  const projects = [
-    {
-      name: "サイトA",
-      client: "顧客A",
-      progress: 0.8,
-      due: "2024-07-31",
-      price: 500000,
-    },
-    {
-      name: "サイトB",
-      client: "顧客B",
-      progress: 1,
-      due: "2024-06-15",
-      price: 300000,
-    },
-    {
-      name: "サイトC",
-      client: "顧客C",
-      progress: 0.4,
-      due: "2024-08-20",
-      price: 450000,
-    },
-  ]
+  const projects = useMemo(() => {
+    const map = new Map<
+      string,
+      { client: string; income: number; expense: number; lastDate: string }
+    >()
+    records.forEach((r) => {
+      const key = String(r.item_id || r.item)
+      if (!map.has(key)) {
+        map.set(key, {
+          client: r.client,
+          income: 0,
+          expense: 0,
+          lastDate: r.date,
+        })
+      }
+      const m = map.get(key)!
+      if (r.category === "Income") m.income += r.amount
+      else m.expense += r.amount
+      if (new Date(r.date) > new Date(m.lastDate)) m.lastDate = r.date
+    })
+    return Array.from(map.entries()).map(([name, v]) => ({
+      name,
+      client: v.client,
+      progress:
+        v.income + v.expense > 0 ? v.income / (v.income + v.expense) : 0,
+      due: v.lastDate,
+      price: v.income,
+    }))
+  }, [records])
 
-  const metrics = [
-    { title: "新規商談数", value: "5件" },
-    { title: "成約率", value: "60%" },
-    { title: "平均制作単価", value: "¥400,000" },
-    { title: "納品期間平均", value: "30日" },
-    { title: "顧客満足度", value: "90%" },
-  ]
+  const totals = useMemo(() => {
+    return records.reduce(
+      (acc, r) => {
+        if (r.category === "Income") acc.income += r.amount
+        else acc.expense += r.amount
+        acc.profit = acc.income - acc.expense
+        return acc
+      },
+      { income: 0, expense: 0, profit: 0 }
+    )
+  }, [records])
+
+  const metrics = useMemo(() => {
+    const clients = new Set(records.map((r) => r.client)).size
+    const incomeRecords = records.filter((r) => r.category === "Income")
+    const expenseRecords = records.filter((r) => r.category === "Expense")
+    const closingRate =
+      incomeRecords.length + expenseRecords.length === 0
+        ? 0
+        :
+          Math.round(
+            (incomeRecords.length /
+              (incomeRecords.length + expenseRecords.length)) *
+              100
+          )
+    const avgPrice =
+      incomeRecords.length === 0
+        ? 0
+        :
+          Math.round(
+            incomeRecords.reduce((sum, r) => sum + r.amount, 0) /
+              incomeRecords.length
+          )
+    const itemDates = new Map<string, { first: number; last: number }>()
+    records.forEach((r) => {
+      const key = String(r.item_id || r.item)
+      const ts = new Date(r.date).getTime()
+      if (!itemDates.has(key)) itemDates.set(key, { first: ts, last: ts })
+      else {
+        const v = itemDates.get(key)!
+        if (ts < v.first) v.first = ts
+        if (ts > v.last) v.last = ts
+      }
+    })
+    const avgDelivery = itemDates.size
+      ? Math.round(
+          Array.from(itemDates.values()).reduce(
+            (sum, { first, last }) => sum + (last - first) / 86400000,
+            0
+          ) / itemDates.size
+        )
+      : 0
+    const satisfaction = totals.income
+      ? Math.round((totals.profit / totals.income) * 100)
+      : 0
+
+    return [
+      { title: "新規商談数", value: `${clients}件` },
+      { title: "成約率", value: `${closingRate}%` },
+      { title: "平均制作単価", value: `¥${avgPrice.toLocaleString()}` },
+      { title: "納品期間平均", value: `${avgDelivery}日` },
+      { title: "顧客満足度", value: `${satisfaction}%` },
+    ]
+  }, [records, totals])
 
   const month = new Date().getMonth() + 1
   const predicted = Math.round((kgiCurrent / month) * 12)
