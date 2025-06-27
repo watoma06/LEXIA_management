@@ -24,9 +24,10 @@ export type NewProject = {
 
 interface AddProjectDialogProps {
   onAdd: (project: NewProject) => void
+  className?: string
 }
 
-export function AddProjectDialog({ onAdd }: AddProjectDialogProps) {
+export function AddProjectDialog({ onAdd, className }: AddProjectDialogProps) {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState<NewProject>({
     project_name: "",
@@ -55,7 +56,7 @@ export function AddProjectDialog({ onAdd }: AddProjectDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">追加</Button>
+        <Button variant="outline" className={className}>追加</Button>
       </DialogTrigger>
       <DialogContent className="space-y-4">
         <DialogHeader>
