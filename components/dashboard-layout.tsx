@@ -85,6 +85,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 KGI/KPI
               </Link>
             </Button>
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/subscriptions">
+                <Package className="h-4 w-4" />
+                サブスク管理
+              </Link>
+            </Button>
             <Button variant="ghost" className="w-full justify-start gap-2">
               <Home className="h-4 w-4" />
               予算
