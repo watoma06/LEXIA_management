@@ -285,8 +285,26 @@ export default function KgiKpiPage() {
     ]
   }, [records, totals])
 
+  const upcomingRevenue = useMemo(() => {
+    return projects
+      .filter((p) => p.status !== "完了")
+      .reduce((sum, p) => sum + p.unit_price, 0)
+  }, [projects])
+
+  const dueSoon = useMemo(() => {
+    const now = Date.now()
+    const week = 7 * 86400000
+    return projects.filter(
+      (p) =>
+        p.status !== "完了" &&
+        new Date(p.due_date).getTime() - now <= week &&
+        new Date(p.due_date).getTime() - now >= 0
+    ).length
+  }, [projects])
+
   const month = new Date().getMonth() + 1
   const predicted = Math.round((kgiCurrent / month) * 12)
+  const predictedWithProjects = predicted + upcomingRevenue
 
   return (
     <DashboardLayout>
@@ -440,7 +458,10 @@ export default function KgiKpiPage() {
           </CardHeader>
           <CardContent>
             <p className="text-sm">
-              今月は新規商談獲得に注力しましょう！売上目標まであと{Math.round(remaining / 10000)}万円です。
+              納期が近い案件が{dueSoon}件あります。早めに対応して売上目標まであと{Math.round(
+                (kgiTarget - (kgiCurrent + upcomingRevenue)) / 10000
+              )}
+              万円を確実に達成しましょう。
             </p>
           </CardContent>
         </Card>
@@ -450,8 +471,10 @@ export default function KgiKpiPage() {
             <CardTitle>年間売上予測</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm">現状ペースでは年間売上は¥{predicted.toLocaleString()}になる見込みです。</p>
-            {predicted < kgiTarget && (
+            <p className="text-sm">
+              進行中の案件を含めると年間売上は¥{predictedWithProjects.toLocaleString()}になる見込みです。
+            </p>
+            {predictedWithProjects < kgiTarget && (
               <p className="mt-2 text-sm text-destructive">目標未達の可能性があります。</p>
             )}
           </CardContent>
