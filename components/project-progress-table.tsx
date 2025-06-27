@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { MoreHorizontal } from "lucide-react"
+import { MoreHorizontal, ChevronUp, ChevronDown } from "lucide-react"
 import { formatNumber } from "@/lib/utils"
 
 export type ProjectProgressRecord = {
@@ -33,9 +33,10 @@ interface ProjectProgressTableProps {
   onEdit?: (project: ProjectProgressRecord) => void
   onDelete?: (id: string) => void
   onUpdate?: (project: ProjectProgressRecord) => void
+  onMove?: (id: string, direction: "up" | "down") => void
 }
 
-export function ProjectProgressTable({ projects, onEdit, onDelete, onUpdate }: ProjectProgressTableProps) {
+export function ProjectProgressTable({ projects, onEdit, onDelete, onUpdate, onMove }: ProjectProgressTableProps) {
   const statusMap: Record<string, number> = {
     "制作待ち": 0,
     "進行中": 50,
@@ -57,6 +58,7 @@ export function ProjectProgressTable({ projects, onEdit, onDelete, onUpdate }: P
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead className="w-0" />
           <TableHead>案件名</TableHead>
           <TableHead>顧客名</TableHead>
           <TableHead>進捗</TableHead>
@@ -66,8 +68,30 @@ export function ProjectProgressTable({ projects, onEdit, onDelete, onUpdate }: P
         </TableRow>
       </TableHeader>
       <TableBody>
-        {projects.map((p) => (
+        {projects.map((p, idx) => (
           <TableRow key={p.id}>
+            <TableCell className="w-0">
+              <div className="flex flex-col">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-4 w-4"
+                  onClick={() => onMove?.(p.id, "up")}
+                  disabled={idx === 0}
+                >
+                  <ChevronUp className="h-3 w-3" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-4 w-4"
+                  onClick={() => onMove?.(p.id, "down")}
+                  disabled={idx === projects.length - 1}
+                >
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </div>
+            </TableCell>
             <TableCell
               contentEditable
               suppressContentEditableWarning

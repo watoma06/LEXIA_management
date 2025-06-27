@@ -85,6 +85,26 @@ export default function KgiKpiPage() {
     setProjects((prev) => prev.filter((p) => p.id !== id))
   }
 
+  const moveProject = (id: string, direction: "up" | "down") => {
+    setProjects((prev) => {
+      const idx = prev.findIndex((p) => p.id === id)
+      if (idx === -1) return prev
+      const newProjects = [...prev]
+      if (direction === "up" && idx > 0) {
+        ;[newProjects[idx - 1], newProjects[idx]] = [
+          newProjects[idx],
+          newProjects[idx - 1],
+        ]
+      } else if (direction === "down" && idx < newProjects.length - 1) {
+        ;[newProjects[idx], newProjects[idx + 1]] = [
+          newProjects[idx + 1],
+          newProjects[idx],
+        ]
+      }
+      return newProjects
+    })
+  }
+
   const [editing, setEditing] = useState<ProjectProgressRecord | null>(null)
 
   const kgiTarget = 1500000
@@ -401,6 +421,7 @@ export default function KgiKpiPage() {
               onEdit={(p) => setEditing(p)}
               onDelete={handleDeleteProject}
               onUpdate={handleUpdateProject}
+              onMove={(id, dir) => moveProject(id, dir)}
             />
           </CardContent>
         </Card>
