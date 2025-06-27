@@ -234,25 +234,21 @@ export default function KgiKpiPage() {
   }, [records])
 
   const metrics = useMemo(() => {
-    const clients = new Set(records.map((r) => r.client)).size
-    const incomeRecords = records.filter((r) => r.category === "Income")
-    const expenseRecords = records.filter((r) => r.category === "Expense")
+    const newDeals = projects.length
     const closingRate =
-      incomeRecords.length + expenseRecords.length === 0
+      projects.length === 0
         ? 0
-        :
-          Math.round(
-            (incomeRecords.length /
-              (incomeRecords.length + expenseRecords.length)) *
+        : Math.round(
+            (projects.filter((p) => p.status === "完了").length /
+              projects.length) *
               100
           )
     const avgPrice =
-      incomeRecords.length === 0
+      projects.length === 0
         ? 0
-        :
-          Math.round(
-            incomeRecords.reduce((sum, r) => sum + r.amount, 0) /
-              incomeRecords.length
+        : Math.round(
+            projects.reduce((sum, p) => sum + p.unit_price, 0) /
+              projects.length
           )
     const itemDates = new Map<string, { first: number; last: number }>()
     records.forEach((r) => {
@@ -278,13 +274,13 @@ export default function KgiKpiPage() {
       : 0
 
     return [
-      { title: "新規商談数", value: `${clients}件` },
+      { title: "新規商談数", value: `${newDeals}件` },
       { title: "成約率", value: `${closingRate}%` },
       { title: "平均制作単価", value: `¥${formatNumber(avgPrice)}` },
       { title: "納品期間平均", value: `${avgDelivery}日` },
       { title: "顧客満足度", value: `${satisfaction}%` },
     ]
-  }, [records, totals])
+  }, [records, totals, projects])
 
   const upcomingRevenue = useMemo(() => {
     return projects
