@@ -430,7 +430,7 @@ export default function KgiKpiPage() {
         <Card>
           <CardHeader className="flex items-center justify-between">
             <CardTitle>案件進捗・ステータス一覧</CardTitle>
-            <AddProjectDialog onAdd={handleAddProject} />
+            <AddProjectDialog onAdd={handleAddProject} className="ml-auto" />
           </CardHeader>
           <CardContent>
             <ProjectProgressTable
