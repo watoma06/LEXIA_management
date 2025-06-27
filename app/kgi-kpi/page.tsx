@@ -27,6 +27,7 @@ import {
 } from "recharts"
 import { useEffect, useMemo, useState } from "react"
 import { supabase, TABLE_NAME, PROJECTS_TABLE } from "@/lib/supabase"
+import { formatNumber } from "@/lib/utils"
 import { RecordItem } from "@/components/vault-table"
 import { AddProjectDialog, NewProject } from "@/components/add-project-dialog"
 import { EditProjectDialog } from "@/components/edit-project-dialog"
@@ -279,7 +280,7 @@ export default function KgiKpiPage() {
     return [
       { title: "新規商談数", value: `${clients}件` },
       { title: "成約率", value: `${closingRate}%` },
-      { title: "平均制作単価", value: `¥${avgPrice.toLocaleString()}` },
+      { title: "平均制作単価", value: `¥${formatNumber(avgPrice)}` },
       { title: "納品期間平均", value: `${avgDelivery}日` },
       { title: "顧客満足度", value: `${satisfaction}%` },
     ]
@@ -411,13 +412,13 @@ export default function KgiKpiPage() {
                   <TableRow key={m.month}>
                     <TableCell>{m.month}</TableCell>
                     <TableCell className="text-right">
-                      ¥{m.income.toLocaleString()}
+                      ¥{formatNumber(m.income)}
                     </TableCell>
                     <TableCell className="text-right">
-                      ¥{m.expense.toLocaleString()}
+                      ¥{formatNumber(m.expense)}
                     </TableCell>
                     <TableCell className="text-right">
-                      ¥{m.profit.toLocaleString()}
+                      ¥{formatNumber(m.profit)}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -472,7 +473,7 @@ export default function KgiKpiPage() {
           </CardHeader>
           <CardContent>
             <p className="text-sm">
-              進行中の案件を含めると年間売上は¥{predictedWithProjects.toLocaleString()}になる見込みです。
+              進行中の案件を含めると年間売上は¥{formatNumber(predictedWithProjects)}になる見込みです。
             </p>
             {predictedWithProjects < kgiTarget && (
               <p className="mt-2 text-sm text-destructive">目標未達の可能性があります。</p>

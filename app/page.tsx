@@ -28,6 +28,7 @@ import { AddRecordDialog, NewRecord } from "@/components/add-record-dialog"
 import { EditRecordDialog } from "@/components/edit-record-dialog"
 import DashboardLayout from "@/components/dashboard-layout"
 import { supabase, TABLE_NAME } from "@/lib/supabase"
+import { formatNumber } from "@/lib/utils"
 import { format } from "date-fns"
 import { ChevronDown } from "lucide-react"
 
@@ -233,15 +234,15 @@ export default function Page() {
       <div className="grid gap-4 md:grid-cols-3">
         <MetricsCard
           title="総収入"
-          value={`¥${totals.income.toLocaleString()}`}
+          value={`¥${formatNumber(totals.income)}`}
         />
         <MetricsCard
           title="総支出"
-          value={`¥${totals.expense.toLocaleString()}`}
+          value={`¥${formatNumber(totals.expense)}`}
         />
         <MetricsCard
           title="純利益"
-          value={`¥${totals.profit.toLocaleString()}`}
+          value={`¥${formatNumber(totals.profit)}`}
         />
       </div>
       <Card className="mt-6 p-6">
