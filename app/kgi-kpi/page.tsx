@@ -29,15 +29,8 @@ import { useEffect, useMemo, useState } from "react"
 import { supabase, TABLE_NAME, PROJECTS_TABLE } from "@/lib/supabase"
 import { RecordItem } from "@/components/vault-table"
 import { AddProjectDialog, NewProject } from "@/components/add-project-dialog"
-
-type ProjectProgressRecord = {
-  id: string
-  project_name: string
-  client_name: string
-  status: string
-  due_date: string
-  unit_price: number
-}
+import { EditProjectDialog } from "@/components/edit-project-dialog"
+import { ProjectProgressTable, ProjectProgressRecord } from "@/components/project-progress-table"
 
 export default function KgiKpiPage() {
   const [records, setRecords] = useState<RecordItem[]>([])
@@ -72,6 +65,26 @@ export default function KgiKpiPage() {
     }
     if (data) setProjects((prev) => [...prev, data as ProjectProgressRecord])
   }
+
+  const handleUpdateProject = async (project: ProjectProgressRecord) => {
+    const { data } = await supabase
+      .from(PROJECTS_TABLE)
+      .update(project)
+      .eq('id', project.id)
+      .select()
+      .single()
+    if (data)
+      setProjects((prev) =>
+        prev.map((p) => (p.id === project.id ? (data as ProjectProgressRecord) : p))
+      )
+  }
+
+  const handleDeleteProject = async (id: string) => {
+    await supabase.from(PROJECTS_TABLE).delete().eq('id', id)
+    setProjects((prev) => prev.filter((p) => p.id !== id))
+  }
+
+  const [editing, setEditing] = useState<ProjectProgressRecord | null>(null)
 
   const kgiTarget = 1500000
 
@@ -206,17 +219,6 @@ export default function KgiKpiPage() {
     "完了": 100,
   }
 
-  const projectRows = useMemo(
-    () =>
-      projects.map((p) => ({
-        name: p.project_name,
-        client: p.client_name,
-        progress: statusMap[p.status] ?? 0,
-        due: p.due_date,
-        price: p.unit_price,
-      })),
-    [projects]
-  )
 
   const totals = useMemo(() => {
     return records.reduce(
@@ -412,30 +414,12 @@ export default function KgiKpiPage() {
             <AddProjectDialog onAdd={handleAddProject} />
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>案件名</TableHead>
-                  <TableHead>顧客名</TableHead>
-                  <TableHead>進捗</TableHead>
-                  <TableHead>納期</TableHead>
-                  <TableHead className="text-right">制作単価</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {projectRows.map((p) => (
-                  <TableRow key={p.name}>
-                    <TableCell>{p.name}</TableCell>
-                    <TableCell>{p.client}</TableCell>
-                    <TableCell className="w-40">
-                      <Progress value={p.progress} className="h-2" />
-                    </TableCell>
-                    <TableCell>{p.due}</TableCell>
-                    <TableCell className="text-right">¥{p.price.toLocaleString()}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <ProjectProgressTable
+              projects={projects}
+              onEdit={(p) => setEditing(p)}
+              onDelete={handleDeleteProject}
+              onUpdate={handleUpdateProject}
+            />
           </CardContent>
         </Card>
 
@@ -473,6 +457,17 @@ export default function KgiKpiPage() {
           </CardContent>
         </Card>
       </div>
+      {editing && (
+        <EditProjectDialog
+          project={editing}
+          onEdit={(p) => {
+            handleUpdateProject(p)
+            setEditing(null)
+          }}
+          open={true}
+          onOpenChange={(v) => !v && setEditing(null)}
+        />
+      )}
     </DashboardLayout>
   )
 }
