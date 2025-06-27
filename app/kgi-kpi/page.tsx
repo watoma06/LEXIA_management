@@ -26,11 +26,21 @@ import {
   CartesianGrid,
 } from "recharts"
 import { useEffect, useMemo, useState } from "react"
-import { supabase, TABLE_NAME } from "@/lib/supabase"
+import { supabase, TABLE_NAME, PROJECTS_TABLE } from "@/lib/supabase"
 import { RecordItem } from "@/components/vault-table"
+
+type ProjectProgressRecord = {
+  id: string
+  project_name: string
+  client_name: string
+  status: string
+  due_date: string
+  unit_price: number
+}
 
 export default function KgiKpiPage() {
   const [records, setRecords] = useState<RecordItem[]>([])
+  const [projects, setProjects] = useState<ProjectProgressRecord[]>([])
 
   useEffect(() => {
     supabase
@@ -38,6 +48,14 @@ export default function KgiKpiPage() {
       .select("*")
       .then(({ data }) => setRecords(data ?? []))
       .catch(() => setRecords([]))
+  }, [])
+
+  useEffect(() => {
+    supabase
+      .from(PROJECTS_TABLE)
+      .select('*')
+      .then(({ data }) => setProjects(data ?? []))
+      .catch(() => setProjects([]))
   }, [])
 
   const kgiTarget = 1500000
@@ -167,35 +185,23 @@ export default function KgiKpiPage() {
     })
   }, [records, currentYear])
 
-  const projects = useMemo(() => {
-    const map = new Map<
-      string,
-      { client: string; income: number; expense: number; lastDate: string }
-    >()
-    records.forEach((r) => {
-      const key = String(r.item_id || r.item)
-      if (!map.has(key)) {
-        map.set(key, {
-          client: r.client,
-          income: 0,
-          expense: 0,
-          lastDate: r.date,
-        })
-      }
-      const m = map.get(key)!
-      if (r.category === "Income") m.income += r.amount
-      else m.expense += r.amount
-      if (new Date(r.date) > new Date(m.lastDate)) m.lastDate = r.date
-    })
-    return Array.from(map.entries()).map(([name, v]) => ({
-      name,
-      client: v.client,
-      progress:
-        v.income + v.expense > 0 ? v.income / (v.income + v.expense) : 0,
-      due: v.lastDate,
-      price: v.income,
-    }))
-  }, [records])
+  const statusMap: Record<string, number> = {
+    "制作待ち": 0,
+    "進行中": 50,
+    "完了": 100,
+  }
+
+  const projectRows = useMemo(
+    () =>
+      projects.map((p) => ({
+        name: p.project_name,
+        client: p.client_name,
+        progress: statusMap[p.status] ?? 0,
+        due: p.due_date,
+        price: p.unit_price,
+      })),
+    [projects]
+  )
 
   const totals = useMemo(() => {
     return records.reduce(
@@ -401,12 +407,12 @@ export default function KgiKpiPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {projects.map((p) => (
+                {projectRows.map((p) => (
                   <TableRow key={p.name}>
                     <TableCell>{p.name}</TableCell>
                     <TableCell>{p.client}</TableCell>
                     <TableCell className="w-40">
-                      <Progress value={p.progress * 100} className="h-2" />
+                      <Progress value={p.progress} className="h-2" />
                     </TableCell>
                     <TableCell>{p.due}</TableCell>
                     <TableCell className="text-right">¥{p.price.toLocaleString()}</TableCell>
