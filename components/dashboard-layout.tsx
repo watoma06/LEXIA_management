@@ -91,16 +91,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 サブスク管理
               </Link>
             </Button>
-            <Button variant="ghost" className="w-full justify-start gap-2">
-              <Home className="h-4 w-4" />
-              予算
-            </Button>
-            <Button asChild variant="ghost" className="w-full justify-start gap-2">
-              <Link href="/account">
-                <Wallet className="h-4 w-4" />
-                アカウント
-              </Link>
-            </Button>
             <Button asChild variant="ghost" className="w-full justify-start gap-2">
               <Link href="/settings">
                 <Settings className="h-4 w-4" />
