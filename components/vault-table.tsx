@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { MoreHorizontal, ChevronUp, ChevronDown } from "lucide-react"
 import { useState, useMemo } from "react"
+import { formatNumber } from "@/lib/utils"
 
 export type RecordItem = {
   id: number
@@ -214,7 +215,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
                   : "text-green-500"
               }
             >
-              {record.amount.toLocaleString()}
+              {formatNumber(record.amount)}
             </TableCell>
             <TableCell
               contentEditable
@@ -295,7 +296,7 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
                     : "text-green-500"
                 }
               >
-                {record.amount.toLocaleString()}
+                {formatNumber(record.amount)}
               </span>
             </div>
             <div className="flex justify-between">

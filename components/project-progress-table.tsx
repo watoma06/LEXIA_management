@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { MoreHorizontal } from "lucide-react"
+import { formatNumber } from "@/lib/utils"
 
 export type ProjectProgressRecord = {
   id: string
@@ -90,7 +91,7 @@ export function ProjectProgressTable({ projects, onEdit, onDelete, onUpdate }: P
               onBlur={(e) => handleBlur(p.id, "unit_price", e.currentTarget.textContent || "")}
               className="text-right"
             >
-              ¥{p.unit_price.toLocaleString()}
+              ¥{formatNumber(p.unit_price)}
             </TableCell>
             <TableCell className="text-right">
               <DropdownMenu>
