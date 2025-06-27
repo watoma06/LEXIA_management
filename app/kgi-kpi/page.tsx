@@ -235,14 +235,6 @@ export default function KgiKpiPage() {
 
   const metrics = useMemo(() => {
     const newDeals = projects.length
-    const closingRate =
-      projects.length === 0
-        ? 0
-        : Math.round(
-            (projects.filter((p) => p.status === "完了").length /
-              projects.length) *
-              100
-          )
     const avgPrice =
       projects.length === 0
         ? 0
@@ -250,37 +242,12 @@ export default function KgiKpiPage() {
             projects.reduce((sum, p) => sum + p.unit_price, 0) /
               projects.length
           )
-    const itemDates = new Map<string, { first: number; last: number }>()
-    records.forEach((r) => {
-      const key = String(r.item_id || r.item)
-      const ts = new Date(r.date).getTime()
-      if (!itemDates.has(key)) itemDates.set(key, { first: ts, last: ts })
-      else {
-        const v = itemDates.get(key)!
-        if (ts < v.first) v.first = ts
-        if (ts > v.last) v.last = ts
-      }
-    })
-    const avgDelivery = itemDates.size
-      ? Math.round(
-          Array.from(itemDates.values()).reduce(
-            (sum, { first, last }) => sum + (last - first) / 86400000,
-            0
-          ) / itemDates.size
-        )
-      : 0
-    const satisfaction = totals.income
-      ? Math.round((totals.profit / totals.income) * 100)
-      : 0
 
     return [
       { title: "新規商談数", value: `${newDeals}件` },
-      { title: "成約率", value: `${closingRate}%` },
       { title: "平均制作単価", value: `¥${formatNumber(avgPrice)}` },
-      { title: "納品期間平均", value: `${avgDelivery}日` },
-      { title: "顧客満足度", value: `${satisfaction}%` },
     ]
-  }, [records, totals, projects])
+  }, [projects])
 
   const upcomingRevenue = useMemo(() => {
     return projects
@@ -438,7 +405,7 @@ export default function KgiKpiPage() {
           </CardContent>
         </Card>
 
-        <div className="grid gap-4 md:grid-cols-5">
+        <div className="grid gap-4 md:grid-cols-2">
           {metrics.map((m) => (
             <Card key={m.title} className="text-center">
               <CardHeader className="pb-2">
