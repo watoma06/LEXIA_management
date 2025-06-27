@@ -9,3 +9,5 @@ export const TABLE_NAME = process.env.NEXT_PUBLIC_SUPABASE_TABLE || 'records'
 export const ITEMS_TABLE = 'items'
 export const PROJECTS_TABLE =
   process.env.NEXT_PUBLIC_SUPABASE_PROJECTS_TABLE || 'project_progress'
+export const SUBSCRIPTIONS_TABLE =
+  process.env.NEXT_PUBLIC_SUPABASE_SUBSCRIPTIONS_TABLE || 'subscriptions'

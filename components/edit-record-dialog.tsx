@@ -22,7 +22,8 @@ import {
 } from "@/components/ui/select"
 import type { RecordItem } from "./vault-table"
 import { ACCOUNT_TYPES } from "@/lib/accountTypes"
-import { supabase, ITEMS_TABLE } from "@/lib/supabase"
+import { supabase, ITEMS_TABLE, SUBSCRIPTIONS_TABLE } from "@/lib/supabase"
+import type { Subscription } from "@/lib/types"
 
 interface EditRecordDialogProps {
   record: RecordItem
@@ -35,6 +36,7 @@ interface EditRecordDialogProps {
 export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, trigger }: EditRecordDialogProps) {
   const [internalOpen, setInternalOpen] = useState(open)
   const [items, setItems] = useState<{ id: number; name: string }[]>([])
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [form, setForm] = useState<RecordItem>(record)
   const [percentage, setPercentage] = useState("")
 
@@ -44,6 +46,11 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
       .select('*')
       .then(({ data }) => setItems(data ?? []))
       .catch(() => setItems([]))
+    supabase
+      .from(SUBSCRIPTIONS_TABLE)
+      .select('*')
+      .then(({ data }) => setSubscriptions(data ?? []))
+      .catch(() => setSubscriptions([]))
   }, [])
 
   useEffect(() => {
@@ -87,6 +94,22 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
       }
     } catch (e) {
       console.error(e)
+    }
+  }
+
+  const applySubscription = (id: string) => {
+    const sub = subscriptions.find((s) => s.id === id)
+    if (sub) {
+      setForm((prev) => ({
+        ...prev,
+        category: sub.category,
+        type: sub.type,
+        amount: sub.amount,
+        client: sub.client,
+        item: sub.item,
+        item_id: sub.item_id || 0,
+        notes: sub.notes,
+      }))
     }
   }
 
@@ -173,6 +196,23 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
             }}
           />
         </div>
+        {subscriptions.length > 0 && (
+          <div className="grid gap-2">
+            <label className="text-sm">サブスクから入力</label>
+            <Select onValueChange={applySubscription}>
+              <SelectTrigger>
+                <SelectValue placeholder="選択" />
+              </SelectTrigger>
+              <SelectContent>
+                {subscriptions.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <div className="grid gap-2">
           <label className="text-sm">備考</label>
           <Textarea value={form.notes} onChange={(e) => handleChange("notes", e.target.value)} />

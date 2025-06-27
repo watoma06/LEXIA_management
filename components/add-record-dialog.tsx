@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { DatePicker } from "@/components/date-picker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ACCOUNT_TYPES } from "@/lib/accountTypes"
-import { supabase, ITEMS_TABLE } from "@/lib/supabase"
+import { supabase, ITEMS_TABLE, SUBSCRIPTIONS_TABLE } from "@/lib/supabase"
+import type { Subscription } from "@/lib/types"
 
 export type NewRecord = {
   category: "Income" | "Expense"
@@ -30,6 +31,7 @@ interface AddRecordDialogProps {
 export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   const [open, setOpen] = useState(false)
   const [items, setItems] = useState<{ id: number; name: string }[]>([])
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [form, setForm] = useState<NewRecord>({
     category: "Income",
     type: ACCOUNT_TYPES[0],
@@ -48,6 +50,11 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
       .select('*')
       .then(({ data }) => setItems(data ?? []))
       .catch(() => setItems([]))
+    supabase
+      .from(SUBSCRIPTIONS_TABLE)
+      .select('*')
+      .then(({ data }) => setSubscriptions(data ?? []))
+      .catch(() => setSubscriptions([]))
   }, [])
 
   const handleChange = (key: keyof NewRecord, value: any) => {
@@ -100,6 +107,22 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
       }
     } catch (e) {
       console.error(e)
+    }
+  }
+
+  const applySubscription = (id: string) => {
+    const sub = subscriptions.find((s) => s.id === id)
+    if (sub) {
+      setForm((prev) => ({
+        ...prev,
+        category: sub.category as NewRecord["category"],
+        type: sub.type,
+        amount: sub.amount,
+        client: sub.client,
+        item: sub.item,
+        item_id: sub.item_id || 0,
+        notes: sub.notes,
+      }))
     }
   }
 
@@ -202,6 +225,23 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
             }}
           />
         </div>
+        {subscriptions.length > 0 && (
+          <div className="grid gap-2">
+            <label className="text-sm">サブスクから入力</label>
+            <Select onValueChange={applySubscription}>
+              <SelectTrigger>
+                <SelectValue placeholder="選択" />
+              </SelectTrigger>
+              <SelectContent>
+                {subscriptions.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <div className="grid gap-2">
           <label className="text-sm">備考</label>
           <Textarea value={form.notes} onChange={(e) => handleChange("notes", e.target.value)} />
