@@ -113,4 +113,3 @@ export function ProjectProgressTable({ projects, onEdit, onDelete, onUpdate }: P
     </Table>
   )
 }
-

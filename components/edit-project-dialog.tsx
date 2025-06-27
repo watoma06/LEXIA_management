@@ -99,4 +99,3 @@ export function EditProjectDialog({ project, onEdit, open = false, onOpenChange,
     </Dialog>
   )
 }
-
