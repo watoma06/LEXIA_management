@@ -28,6 +28,7 @@ import {
 import { useEffect, useMemo, useState } from "react"
 import { supabase, TABLE_NAME, PROJECTS_TABLE } from "@/lib/supabase"
 import { RecordItem } from "@/components/vault-table"
+import { AddProjectDialog, NewProject } from "@/components/add-project-dialog"
 
 type ProjectProgressRecord = {
   id: string
@@ -57,6 +58,20 @@ export default function KgiKpiPage() {
       .then(({ data }) => setProjects(data ?? []))
       .catch(() => setProjects([]))
   }, [])
+
+  const handleAddProject = async (project: NewProject) => {
+    const { data, error } = await supabase
+      .from(PROJECTS_TABLE)
+      .insert(project)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Insert project error:', error.message)
+      return
+    }
+    if (data) setProjects((prev) => [...prev, data as ProjectProgressRecord])
+  }
 
   const kgiTarget = 1500000
 
@@ -392,8 +407,9 @@ export default function KgiKpiPage() {
         </Card>
 
         <Card>
-          <CardHeader>
+          <CardHeader className="flex items-center justify-between">
             <CardTitle>案件進捗・ステータス一覧</CardTitle>
+            <AddProjectDialog onAdd={handleAddProject} />
           </CardHeader>
           <CardContent>
             <Table>
