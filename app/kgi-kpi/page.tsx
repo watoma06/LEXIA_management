@@ -100,18 +100,15 @@ export default function KgiKpiPage() {
         newProjects[swapIdx],
         newProjects[idx],
       ]
-      ;[newProjects[idx].sort_order, newProjects[swapIdx].sort_order] = [
-        newProjects[swapIdx].sort_order,
-        newProjects[idx].sort_order,
-      ]
-      updates = [
-        { id: newProjects[idx].id, sort_order: newProjects[idx].sort_order },
-        { id: newProjects[swapIdx].id, sort_order: newProjects[swapIdx].sort_order },
-      ]
+      newProjects.forEach((p, i) => {
+        p.sort_order = i
+      })
+      updates = newProjects.map((p) => ({ id: p.id, sort_order: p.sort_order }))
       return newProjects
     })
-    if (updates.length)
+    if (updates.length) {
       await supabase.from(PROJECTS_TABLE).upsert(updates)
+    }
   }
 
   const [editing, setEditing] = useState<ProjectProgressRecord | null>(null)
