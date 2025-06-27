@@ -97,4 +97,3 @@ export function AddProjectDialog({ onAdd }: AddProjectDialogProps) {
     </Dialog>
   )
 }
-
