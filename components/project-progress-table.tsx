@@ -9,6 +9,13 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { MoreHorizontal } from "lucide-react"
 import { formatNumber } from "@/lib/utils"
 
@@ -76,7 +83,21 @@ export function ProjectProgressTable({ projects, onEdit, onDelete, onUpdate }: P
               {p.client_name}
             </TableCell>
             <TableCell className="w-40">
-              <Progress value={statusMap[p.status] ?? 0} className="h-2" />
+              <Select
+                value={p.status}
+                onValueChange={(v) => handleBlur(p.id, "status", v)}
+              >
+                <SelectTrigger className="h-2 w-full border-none p-0 [&>svg]:hidden focus:ring-0">
+                  <SelectValue asChild>
+                    <Progress value={statusMap[p.status] ?? 0} className="h-2 w-full" />
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="制作待ち">制作待ち</SelectItem>
+                  <SelectItem value="進行中">進行中</SelectItem>
+                  <SelectItem value="完了">完了</SelectItem>
+                </SelectContent>
+              </Select>
             </TableCell>
             <TableCell
               contentEditable
