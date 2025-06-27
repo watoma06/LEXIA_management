@@ -33,6 +33,8 @@ LEXIA会計ダッシュボードは、収入と支出を管理するためのシ
 このプロジェクトはSupabaseにレコードを保存します。`.env.example`を基に`.env.local`ファイルを作成し、`NEXT_PUBLIC_SUPABASE_URL`と`NEXT_PUBLIC_SUPABASE_ANON_KEY`の値を設定してください。
 サブスク機能を利用する場合は`NEXT_PUBLIC_SUPABASE_SUBSCRIPTIONS_TABLE`も設定してください（デフォルトは`subscriptions`）。
 
+`project_progress`テーブルで並び順を保持するため、`sort_order int4`カラムを追加しておく必要があります。
+
 ## CSVインポート形式
 
 一括インポートでは、以下のヘッダー列を持つCSVファイルが必要です：

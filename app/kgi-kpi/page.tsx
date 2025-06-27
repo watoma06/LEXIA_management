@@ -49,14 +49,17 @@ export default function KgiKpiPage() {
     supabase
       .from(PROJECTS_TABLE)
       .select('*')
+      .order('sort_order', { ascending: true })
       .then(({ data }) => setProjects(data ?? []))
       .catch(() => setProjects([]))
   }, [])
 
   const handleAddProject = async (project: NewProject) => {
+    const nextOrder =
+      projects.reduce((max, p) => Math.max(max, p.sort_order), -1) + 1
     const { data, error } = await supabase
       .from(PROJECTS_TABLE)
-      .insert(project)
+      .insert({ ...project, sort_order: nextOrder })
       .select()
       .single()
 
@@ -85,24 +88,30 @@ export default function KgiKpiPage() {
     setProjects((prev) => prev.filter((p) => p.id !== id))
   }
 
-  const moveProject = (id: string, direction: "up" | "down") => {
+  const moveProject = async (id: string, direction: "up" | "down") => {
+    let updates: { id: string; sort_order: number }[] = []
     setProjects((prev) => {
       const idx = prev.findIndex((p) => p.id === id)
       if (idx === -1) return prev
+      const swapIdx = direction === "up" ? idx - 1 : idx + 1
+      if (swapIdx < 0 || swapIdx >= prev.length) return prev
       const newProjects = [...prev]
-      if (direction === "up" && idx > 0) {
-        ;[newProjects[idx - 1], newProjects[idx]] = [
-          newProjects[idx],
-          newProjects[idx - 1],
-        ]
-      } else if (direction === "down" && idx < newProjects.length - 1) {
-        ;[newProjects[idx], newProjects[idx + 1]] = [
-          newProjects[idx + 1],
-          newProjects[idx],
-        ]
-      }
+      ;[newProjects[idx], newProjects[swapIdx]] = [
+        newProjects[swapIdx],
+        newProjects[idx],
+      ]
+      ;[newProjects[idx].sort_order, newProjects[swapIdx].sort_order] = [
+        newProjects[swapIdx].sort_order,
+        newProjects[idx].sort_order,
+      ]
+      updates = [
+        { id: newProjects[idx].id, sort_order: newProjects[idx].sort_order },
+        { id: newProjects[swapIdx].id, sort_order: newProjects[swapIdx].sort_order },
+      ]
       return newProjects
     })
+    if (updates.length)
+      await supabase.from(PROJECTS_TABLE).upsert(updates)
   }
 
   const [editing, setEditing] = useState<ProjectProgressRecord | null>(null)
