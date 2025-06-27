@@ -27,6 +27,7 @@ export type ProjectProgressRecord = {
   status: string
   due_date: string
   unit_price: number
+  sort_order: number
 }
 
 interface ProjectProgressTableProps {
