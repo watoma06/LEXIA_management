@@ -19,6 +19,7 @@ import {
   Settings,
   Wallet,
   Calculator,
+  Code2,
 } from "lucide-react"
 
 export function MobileNav() {
@@ -57,6 +58,12 @@ export function MobileNav() {
             <Link href="/settings">
               <Settings className="h-4 w-4" />
               設定
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link href="/web-dev">
+              <Code2 className="h-4 w-4" />
+              開発手法
             </Link>
           </Button>
           <LogoutButton />
