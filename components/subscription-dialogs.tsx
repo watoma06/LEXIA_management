@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ACCOUNT_TYPES } from "@/lib/accountTypes"
-import { supabase, ITEMS_TABLE } from "@/lib/supabase"
+import { supabase } from "@/lib/supabase"
 import type { Subscription } from "@/lib/types"
 
 interface AddProps {
@@ -16,7 +16,6 @@ interface AddProps {
 
 export function AddSubscriptionDialog({ onAdd }: AddProps) {
   const [open, setOpen] = useState(false)
-  const [items, setItems] = useState<{ id: number; name: string }[]>([])
   const [form, setForm] = useState<Omit<Subscription, 'id'>>({
     name: '',
     category: 'Expense',
@@ -24,17 +23,8 @@ export function AddSubscriptionDialog({ onAdd }: AddProps) {
     amount: 0,
     client: '',
     item: '',
-    item_id: 0,
     notes: '',
   })
-
-  useEffect(() => {
-    supabase
-      .from(ITEMS_TABLE)
-      .select('*')
-      .then(({ data }) => setItems(data ?? []))
-      .catch(() => setItems([]))
-  }, [])
 
   const handleChange = (key: keyof typeof form, value: any) => {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -44,7 +34,6 @@ export function AddSubscriptionDialog({ onAdd }: AddProps) {
     const payload = {
       ...form,
       amount: Number(form.amount),
-      item_id: form.item_id || null,
     }
     onAdd(payload)
     setOpen(false)
@@ -55,7 +44,6 @@ export function AddSubscriptionDialog({ onAdd }: AddProps) {
       amount: 0,
       client: '',
       item: '',
-      item_id: 0,
       notes: '',
     })
   }
@@ -112,12 +100,7 @@ export function AddSubscriptionDialog({ onAdd }: AddProps) {
           <label className="text-sm">名称</label>
           <Input
             value={form.item}
-            onChange={(e) => {
-              const value = e.target.value
-              handleChange('item', value)
-              const found = items.find((i) => i.name === value)
-              handleChange('item_id', found ? found.id : 0)
-            }}
+            onChange={(e) => handleChange('item', e.target.value)}
           />
         </div>
         <div className="grid gap-2">
@@ -142,16 +125,8 @@ interface EditProps {
 
 export function EditSubscriptionDialog({ subscription, onEdit, open = false, onOpenChange, trigger }: EditProps) {
   const [internalOpen, setInternalOpen] = useState(open)
-  const [items, setItems] = useState<{ id: number; name: string }[]>([])
   const [form, setForm] = useState<Subscription>(subscription)
 
-  useEffect(() => {
-    supabase
-      .from(ITEMS_TABLE)
-      .select('*')
-      .then(({ data }) => setItems(data ?? []))
-      .catch(() => setItems([]))
-  }, [])
 
   useEffect(() => {
     setForm(subscription)
@@ -224,12 +199,7 @@ export function EditSubscriptionDialog({ subscription, onEdit, open = false, onO
           <label className="text-sm">名称</label>
           <Input
             value={form.item}
-            onChange={(e) => {
-              const value = e.target.value
-              handleChange('item', value)
-              const found = items.find((i) => i.name === value)
-              handleChange('item_id', found ? found.id : 0)
-            }}
+            onChange={(e) => handleChange('item', e.target.value)}
           />
         </div>
         <div className="grid gap-2">

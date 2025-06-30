@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { DatePicker } from "@/components/date-picker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ACCOUNT_TYPES } from "@/lib/accountTypes"
-import { supabase, ITEMS_TABLE, SUBSCRIPTIONS_TABLE } from "@/lib/supabase"
+import { supabase, SUBSCRIPTIONS_TABLE } from "@/lib/supabase"
 import type { Subscription } from "@/lib/types"
 
 export type NewRecord = {
@@ -19,7 +19,6 @@ export type NewRecord = {
   amount: number
   client: string
   item: string
-  item_id: number | null
   notes: string
 }
 
@@ -30,7 +29,6 @@ interface AddRecordDialogProps {
 
 export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   const [open, setOpen] = useState(false)
-  const [items, setItems] = useState<{ id: number; name: string }[]>([])
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [form, setForm] = useState<NewRecord>({
     category: "Income",
@@ -39,17 +37,11 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
     amount: 0,
     client: "",
     item: "",
-    item_id: 0,
     notes: "",
   })
   const [percentage, setPercentage] = useState("")
 
   useEffect(() => {
-    supabase
-      .from(ITEMS_TABLE)
-      .select('*')
-      .then(({ data }) => setItems(data ?? []))
-      .catch(() => setItems([]))
     supabase
       .from(SUBSCRIPTIONS_TABLE)
       .select('*')
@@ -65,7 +57,6 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
     const payload = {
       ...form,
       amount: Number(form.amount),
-      item_id: form.item_id || null,
     }
     onAdd(payload)
     setOpen(false)
@@ -76,7 +67,6 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
       amount: 0,
       client: "",
       item: "",
-      item_id: 0,
       notes: "",
     })
   }
@@ -120,7 +110,6 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         amount: sub.amount,
         client: sub.client,
         item: sub.item,
-        item_id: sub.item_id || 0,
         notes: sub.notes,
       }))
     }
@@ -136,7 +125,6 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
         const records = (results.data as any[]).map((r) => ({
           ...r,
           amount: Number(r.amount),
-          item_id: r.item_id ? Number(r.item_id) : null,
         })) as NewRecord[]
         if (onImport) records.length && onImport(records)
         else records.forEach((r) => onAdd(r))
@@ -217,12 +205,7 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
           <label className="text-sm">名称</label>
           <Input
             value={form.item}
-            onChange={(e) => {
-              const value = e.target.value
-              handleChange("item", value)
-              const found = items.find((i) => i.name === value)
-              handleChange("item_id", found ? found.id : 0)
-            }}
+            onChange={(e) => handleChange("item", e.target.value)}
           />
         </div>
         {subscriptions.length > 0 && (

@@ -6,6 +6,5 @@ export interface Subscription {
   amount: number
   client: string
   item: string
-  item_id: number | null
   notes: string
 }
