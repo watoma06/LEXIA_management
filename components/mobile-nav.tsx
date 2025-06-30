@@ -15,6 +15,7 @@ import {
   Home,
   Package,
   LayoutDashboard,
+  BookOpen,
   Menu,
   Settings,
   Wallet,
@@ -51,6 +52,12 @@ export function MobileNav() {
             <Link href="/kgi-kpi">
               <BarChart3 className="h-4 w-4" />
               KGI/KPI
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link href="/web-dev">
+              <BookOpen className="h-4 w-4" />
+              WEB開発手法
             </Link>
           </Button>
           <Button asChild variant="ghost" className="w-full justify-start gap-2">

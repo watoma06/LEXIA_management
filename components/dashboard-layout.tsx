@@ -10,6 +10,7 @@ import {
   BarChart3,
   ChevronDown,
   Globe,
+  BookOpen,
   Home,
   Package,
   LayoutDashboard,
@@ -89,6 +90,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <Link href="/subscriptions">
                 <Package className="h-4 w-4" />
                 サブスク管理
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/web-dev">
+                <BookOpen className="h-4 w-4" />
+                WEB開発手法
               </Link>
             </Button>
             <Button asChild variant="ghost" className="w-full justify-start gap-2">
