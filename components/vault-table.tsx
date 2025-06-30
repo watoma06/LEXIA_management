@@ -23,7 +23,6 @@ export type RecordItem = {
   amount: number
   client: string
   item: string
-  item_id: number
   notes: string
 }
 
@@ -91,7 +90,6 @@ export function RecordsTable({ records, onEdit, onDelete, onUpdate }: RecordsTab
       amount: record.amount,
       client: record.client,
       item: record.item,
-      item_id: record.item_id,
       notes: record.notes,
     }
 

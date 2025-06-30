@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select"
 import type { RecordItem } from "./vault-table"
 import { ACCOUNT_TYPES } from "@/lib/accountTypes"
-import { supabase, ITEMS_TABLE, SUBSCRIPTIONS_TABLE } from "@/lib/supabase"
+import { supabase, SUBSCRIPTIONS_TABLE } from "@/lib/supabase"
 import type { Subscription } from "@/lib/types"
 
 interface EditRecordDialogProps {
@@ -35,17 +35,11 @@ interface EditRecordDialogProps {
 
 export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, trigger }: EditRecordDialogProps) {
   const [internalOpen, setInternalOpen] = useState(open)
-  const [items, setItems] = useState<{ id: number; name: string }[]>([])
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [form, setForm] = useState<RecordItem>(record)
   const [percentage, setPercentage] = useState("")
 
   useEffect(() => {
-    supabase
-      .from(ITEMS_TABLE)
-      .select('*')
-      .then(({ data }) => setItems(data ?? []))
-      .catch(() => setItems([]))
     supabase
       .from(SUBSCRIPTIONS_TABLE)
       .select('*')
@@ -107,7 +101,6 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
         amount: sub.amount,
         client: sub.client,
         item: sub.item,
-        item_id: sub.item_id || 0,
         notes: sub.notes,
       }))
     }
@@ -188,12 +181,7 @@ export function EditRecordDialog({ record, onEdit, open = false, onOpenChange, t
           <label className="text-sm">名称</label>
           <Input
             value={form.item}
-            onChange={(e) => {
-              const value = e.target.value
-              handleChange("item", value)
-              const found = items.find((i) => i.name === value)
-              handleChange("item_id", found ? found.id : 0)
-            }}
+            onChange={(e) => handleChange("item", e.target.value)}
           />
         </div>
         {subscriptions.length > 0 && (

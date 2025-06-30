@@ -131,14 +131,14 @@ export default function KgiKpiPage() {
   const remaining = kgiTarget - kgiCurrent
 
   const uniqueItems = useMemo(() => {
-    return new Set(records.map((r) => r.item_id || r.item)).size
+    return new Set(records.map((r) => r.item)).size
   }, [records])
 
   const completedItems = useMemo(() => {
     return new Set(
       records
         .filter((r) => r.category === "Income")
-        .map((r) => r.item_id || r.item)
+        .map((r) => r.item)
     ).size
   }, [records])
 
@@ -192,7 +192,7 @@ export default function KgiKpiPage() {
               new Date(r.date).getFullYear() === currentYear &&
               new Date(r.date).getMonth() + 1 === month
           )
-          .map((r) => r.item_id || r.item)
+          .map((r) => r.item)
       ).size
       const lastYearVal = new Set(
         records
@@ -202,7 +202,7 @@ export default function KgiKpiPage() {
               new Date(r.date).getFullYear() === lastYear &&
               new Date(r.date).getMonth() + 1 === month
           )
-          .map((r) => r.item_id || r.item)
+          .map((r) => r.item)
       ).size
       return {
         month: `${month}月`,
