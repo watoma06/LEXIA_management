@@ -40,7 +40,7 @@ LEXIA会計ダッシュボードは、収入と支出を管理するためのシ
 一括インポートでは、以下のヘッダー列を持つCSVファイルが必要です：
 
 \`\`\`
-category,type,date,amount,client,item,item_id,notes
+category,type,date,amount,client,item,notes
 \`\`\`
 
-`category`は`Income`（収入）または`Expense`（支出）のいずれかにしてください。`type`列は勘定科目を表す任意のテキスト値を受け付けます。`date`は`YYYY-MM-DD`形式である必要があり、`amount`は数値にしてください。`item_id`は`items`テーブルのIDに対応します。
+`category`は`Income`（収入）または`Expense`（支出）のいずれかにしてください。`type`列は勘定科目を表す任意のテキスト値を受け付けます。`date`は`YYYY-MM-DD`形式である必要があり、`amount`は数値にしてください。
