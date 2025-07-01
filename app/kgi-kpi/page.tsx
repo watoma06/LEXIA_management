@@ -199,42 +199,7 @@ export default function KgiKpiPage() {
     )
   }, [records])
 
-  const metrics = useMemo(() => {
-    const newDeals = projects.length
-    const avgPrice =
-      projects.length === 0
-        ? 0
-        : Math.round(
-            projects.reduce((sum, p) => sum + p.unit_price, 0) /
-              projects.length
-          )
 
-    return [
-      { title: "新規商談数", value: `${newDeals}件` },
-      { title: "平均制作単価", value: `¥${formatNumber(avgPrice)}` },
-    ]
-  }, [projects])
-
-  const upcomingRevenue = useMemo(() => {
-    return projects
-      .filter((p) => p.status !== "完了")
-      .reduce((sum, p) => sum + p.unit_price, 0)
-  }, [projects])
-
-  const dueSoon = useMemo(() => {
-    const now = Date.now()
-    const week = 7 * 86400000
-    return projects.filter(
-      (p) =>
-        p.status !== "完了" &&
-        new Date(p.due_date).getTime() - now <= week &&
-        new Date(p.due_date).getTime() - now >= 0
-    ).length
-  }, [projects])
-
-  const month = new Date().getMonth() + 1
-  const predicted = Math.round((kgiCurrent / month) * 12)
-  const predictedWithProjects = predicted + upcomingRevenue
 
   return (
     <DashboardLayout>
@@ -358,44 +323,6 @@ export default function KgiKpiPage() {
 
 
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {metrics.map((m) => (
-            <Card key={m.title} className="text-center">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">{m.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-bold">{m.value}</CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>アクション・ヒント</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">
-              納期が近い案件が{dueSoon}件あります。早めに対応して売上目標まであと{Math.round(
-                (kgiTarget - (kgiCurrent + upcomingRevenue)) / 10000
-              )}
-              万円を確実に達成しましょう。
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>年間売上予測</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">
-              進行中の案件を含めると年間売上は¥{formatNumber(predictedWithProjects)}になる見込みです。
-            </p>
-            {predictedWithProjects < kgiTarget && (
-              <p className="mt-2 text-sm text-destructive">目標未達の可能性があります。</p>
-            )}
-          </CardContent>
-        </Card>
       </div>
       {}
     </DashboardLayout>
