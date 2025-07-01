@@ -18,6 +18,7 @@ import {
   Settings,
   Wallet,
   Calculator,
+  ListTodo,
 } from "lucide-react"
 
 interface DashboardLayoutProps {
@@ -43,7 +44,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <header className="flex items-center h-16 gap-2 border-b px-4 lg:hidden">
         <MobileNav />
         <Wallet className="h-6 w-6" />
-        <span className="font-bold">LEXIA会計システム</span>
+        <span className="font-bold">LEXIA management system</span>
       </header>
       <div
         className={`grid transition-[grid-template-columns] duration-200 [grid-template-columns:1fr] ${
@@ -65,7 +66,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="sr-only">Close Sidebar</span>
             </Button>
             <Wallet className="h-6 w-6" />
-            <span className="font-bold">LEXIA会計システム</span>
+            <span className="font-bold">LEXIA management system</span>
           </div>
           <nav className="space-y-2 px-2">
             <Button asChild variant="ghost" className="w-full justify-start gap-2">
@@ -84,6 +85,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <Link href="/kgi-kpi">
                 <BarChart3 className="h-4 w-4" />
                 KGI/KPI
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/todo">
+                <ListTodo className="h-4 w-4" />
+                Todo
               </Link>
             </Button>
             <Button asChild variant="ghost" className="w-full justify-start gap-2">
