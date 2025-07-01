@@ -20,6 +20,7 @@ import {
   Settings,
   Wallet,
   Calculator,
+  ListTodo,
 } from "lucide-react"
 
 export function MobileNav() {
@@ -33,7 +34,7 @@ export function MobileNav() {
       <SheetContent side="left" className="w-64 p-0">
         <div className="flex h-16 items-center gap-2 border-b px-6">
           <Wallet className="h-6 w-6" />
-          <span className="font-bold">LEXIA会計システム</span>
+          <span className="font-bold">LEXIA management system</span>
         </div>
         <nav className="space-y-2 px-2">
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
@@ -52,6 +53,12 @@ export function MobileNav() {
             <Link href="/kgi-kpi">
               <BarChart3 className="h-4 w-4" />
               KGI/KPI
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link href="/todo">
+              <ListTodo className="h-4 w-4" />
+              Todo
             </Link>
           </Button>
           <Button asChild variant="ghost" className="w-full justify-start gap-2">

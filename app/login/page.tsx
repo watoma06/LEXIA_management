@@ -28,7 +28,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
-        <h1 className="text-center text-2xl font-bold mb-4">LEXIA会計システム</h1>
+        <h1 className="text-center text-2xl font-bold mb-4">LEXIA management system</h1>
         <Input
           type="email"
           value={email}
