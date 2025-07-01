@@ -79,8 +79,11 @@ export function EditProjectDialog({ project, onEdit, open = false, onOpenChange,
               <SelectValue placeholder="進捗" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="客先提案">客先提案</SelectItem>
+              <SelectItem value="客先待ち">客先待ち</SelectItem>
               <SelectItem value="制作待ち">制作待ち</SelectItem>
               <SelectItem value="進行中">進行中</SelectItem>
+              <SelectItem value="納品済み">納品済み</SelectItem>
               <SelectItem value="完了">完了</SelectItem>
             </SelectContent>
           </Select>

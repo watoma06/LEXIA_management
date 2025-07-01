@@ -7,6 +7,8 @@ import { useEffect, useState, useMemo } from "react"
 import { AddProjectDialog, NewProject } from "@/components/add-project-dialog"
 import { EditProjectDialog } from "@/components/edit-project-dialog"
 import { ProjectProgressTable, ProjectProgressRecord } from "@/components/project-progress-table"
+import ProjectCalendar from "@/components/project-calendar"
+import ProjectGanttChart from "@/components/project-gantt-chart"
 import type { RecordItem } from "@/components/vault-table"
 import { formatNumber } from "@/lib/utils"
 
@@ -186,6 +188,24 @@ export default function TodoPage() {
           {predictedWithProjects < kgiTarget && (
             <p className="mt-2 text-sm text-destructive">目標未達の可能性があります。</p>
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>スケジュールカレンダー</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProjectCalendar projects={projects} />
+        </CardContent>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>簡易ガントチャート</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProjectGanttChart projects={projects} />
         </CardContent>
       </Card>
 

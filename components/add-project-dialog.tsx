@@ -32,7 +32,7 @@ export function AddProjectDialog({ onAdd, className }: AddProjectDialogProps) {
   const [form, setForm] = useState<NewProject>({
     project_name: "",
     client_name: "",
-    status: "制作待ち",
+    status: "客先提案",
     due_date: new Date().toISOString().slice(0, 10),
     unit_price: 0,
   })
@@ -47,7 +47,7 @@ export function AddProjectDialog({ onAdd, className }: AddProjectDialogProps) {
     setForm({
       project_name: "",
       client_name: "",
-      status: "制作待ち",
+      status: "客先提案",
       due_date: new Date().toISOString().slice(0, 10),
       unit_price: 0,
     })
@@ -77,8 +77,11 @@ export function AddProjectDialog({ onAdd, className }: AddProjectDialogProps) {
               <SelectValue placeholder="進捗" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="客先提案">客先提案</SelectItem>
+              <SelectItem value="客先待ち">客先待ち</SelectItem>
               <SelectItem value="制作待ち">制作待ち</SelectItem>
               <SelectItem value="進行中">進行中</SelectItem>
+              <SelectItem value="納品済み">納品済み</SelectItem>
               <SelectItem value="完了">完了</SelectItem>
             </SelectContent>
           </Select>
