@@ -1,4 +1,4 @@
-# LEXIA会計システム
+# LEXIA management system
 
 *[v0.dev](https://v0.dev) デプロイメントと自動同期*
 
