@@ -11,7 +11,5 @@ export interface Subscription {
 
 export interface Booking {
   id: string
-  name: string
-  date: string
-  notes?: string
+
 }

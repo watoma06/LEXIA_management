@@ -3,6 +3,7 @@
 import type { ReactNode } from "react"
 import { useState } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { MobileNav } from "@/components/mobile-nav"
 import LogoutButton from "@/components/LogoutButton"
@@ -11,6 +12,7 @@ import {
   ChevronDown,
   Globe,
   BookOpen,
+  CalendarClock,
   Home,
   Package,
   LayoutDashboard,
@@ -27,6 +29,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const pathname = usePathname()
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -99,6 +102,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 サブスク管理
               </Link>
             </Button>
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/reservation">
+                <CalendarClock className="h-4 w-4" />
+                予約画面
+              </Link>
+            </Button>
+            {pathname?.startsWith("/reservation") && (
+              <Button asChild variant="ghost" className="w-full justify-start gap-2">
+                <Link href="/reservation/admin">
+                  <LayoutDashboard className="h-4 w-4" />
+                  管理画面
+                </Link>
+              </Button>
+            )}
             <Button asChild variant="ghost" className="w-full justify-start gap-2">
               <Link href="/web-dev">
                 <BookOpen className="h-4 w-4" />

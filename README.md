@@ -33,6 +33,22 @@ LEXIA会計ダッシュボードは、収入と支出を管理するためのシ
 このプロジェクトはSupabaseにレコードを保存します。`.env.example`を基に`.env.local`ファイルを作成し、`NEXT_PUBLIC_SUPABASE_URL`と`NEXT_PUBLIC_SUPABASE_ANON_KEY`の値を設定してください。
 サブスク機能を利用する場合は`NEXT_PUBLIC_SUPABASE_SUBSCRIPTIONS_TABLE`も設定してください（デフォルトは`subscriptions`）。
 
+予約システム用には`NEXT_PUBLIC_SUPABASE_BOOKINGS_TABLE`を設定してください（デフォルトは`bookings`）。
+
+### 予約テーブルの例
+
+```
+id uuid primary key default uuid_generate_v4()
+patient_name text
+phone text
+email text
+appointment_date date
+appointment_time text
+notes text
+status text default 'pending'
+created_at timestamp with time zone default now()
+```
+
 `project_progress`テーブルで並び順を保持するため、`sort_order int4`カラムを追加しておく必要があります。
 
 ## CSVインポート形式

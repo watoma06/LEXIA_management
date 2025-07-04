@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import LogoutButton from "@/components/LogoutButton"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   Sheet,
   SheetContent,
@@ -24,6 +25,7 @@ import {
 } from "lucide-react"
 
 export function MobileNav() {
+  const pathname = usePathname()
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -67,6 +69,20 @@ export function MobileNav() {
               WEB開発手法
             </Link>
           </Button>
+          <Button asChild variant="ghost" className="w-full justify-start gap-2">
+            <Link href="/reservation">
+              <CalendarClock className="h-4 w-4" />
+              予約画面
+            </Link>
+          </Button>
+          {pathname?.startsWith("/reservation") && (
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/reservation/admin">
+                <LayoutDashboard className="h-4 w-4" />
+                管理画面
+              </Link>
+            </Button>
+          )}
           <Button asChild variant="ghost" className="w-full justify-start gap-2">
             <Link href="/settings">
               <Settings className="h-4 w-4" />
