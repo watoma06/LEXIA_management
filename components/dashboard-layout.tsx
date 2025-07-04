@@ -134,7 +134,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </nav>
         </aside>
         )}
-        <main className="p-6">{children}</main>
+        <main className="p-6 min-w-0">{children}</main>
       </div>
     </div>
   )
