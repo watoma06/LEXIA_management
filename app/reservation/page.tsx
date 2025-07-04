@@ -15,11 +15,7 @@ import {
   startOfWeek,
   endOfWeek,
   eachDayOfInterval,
-  startOfMonth,
-  endOfMonth,
   subDays,
-  addMonths,
-  subMonths,
 } from "date-fns"
 import { ja } from 'date-fns/locale'
 
@@ -36,11 +32,8 @@ const TIMES = [
   "20:00",
 ]
 
-type ViewMode = "weekly" | "monthly"
-
 export default function ReservationPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
-  const [viewMode, setViewMode] = useState<ViewMode>("weekly")
   const [bookings, setBookings] = useState<Booking[]>([])
   const [selectedSlot, setSelectedSlot] = useState<{ date: string; time: string } | null>(null)
   const [form, setForm] = useState({
@@ -51,10 +44,10 @@ export default function ReservationPage() {
   })
   const [message, setMessage] = useState<string | null>(null)
 
-  const dateRange =
-    viewMode === "weekly"
-      ? eachDayOfInterval({ start: startOfWeek(currentDate, { weekStartsOn: 1 }), end: endOfWeek(currentDate, { weekStartsOn: 1 }) })
-      : eachDayOfInterval({ start: startOfMonth(currentDate), end: endOfMonth(currentDate) })
+  const dateRange = eachDayOfInterval({
+    start: startOfWeek(currentDate, { weekStartsOn: 1 }),
+    end: endOfWeek(currentDate, { weekStartsOn: 1 }),
+  })
 
   useEffect(() => {
     const startDate = format(dateRange[0], "yyyy-MM-dd")
@@ -67,22 +60,14 @@ export default function ReservationPage() {
       .lte("appointment_date", endDate)
       .then(({ data }) => setBookings(data ?? []))
       .catch(() => setBookings([]))
-  }, [currentDate, viewMode, dateRange])
+  }, [currentDate, dateRange])
 
   const handlePrev = () => {
-    if (viewMode === "weekly") {
-      setCurrentDate(subDays(currentDate, 7))
-    } else {
-      setCurrentDate(subMonths(currentDate, 1))
-    }
+    setCurrentDate(subDays(currentDate, 7))
   }
 
   const handleNext = () => {
-    if (viewMode === "weekly") {
-      setCurrentDate(addDays(currentDate, 7))
-    } else {
-      setCurrentDate(addMonths(currentDate, 1))
-    }
+    setCurrentDate(addDays(currentDate, 7))
   }
 
   const handleSubmit = async () => {
@@ -133,21 +118,6 @@ export default function ReservationPage() {
             {format(dateRange[0], "yyyy年M月d日")} - {format(dateRange[dateRange.length - 1], "M月d日")}
           </span>
         </div>
-        <div>
-          <Button
-            variant={viewMode === "weekly" ? "default" : "outline"}
-            onClick={() => setViewMode("weekly")}
-            className="mr-2"
-          >
-            週間
-          </Button>
-          <Button
-            variant={viewMode === "monthly" ? "default" : "outline"}
-            onClick={() => setViewMode("monthly")}
-          >
-            月間
-          </Button>
-        </div>
       </div>
 
       <div className="overflow-x-auto">
@@ -157,7 +127,7 @@ export default function ReservationPage() {
               <th className="p-2 border-r w-24 h-24 align-middle"></th> {/* Empty header cell */}
               {dateRange.map((day) => (
                 <th key={day.toString()} className="p-2 border-r w-24 h-24 align-middle">
-                  {format(day, "M/d (EEEEE)", { locale: ja })}
+                  {format(day, "EEEEE", { locale: ja })}
                 </th>
               ))}
             </tr>

@@ -3,7 +3,8 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import ReservationPage from "./page"
 import { supabase, BOOKINGS_TABLE } from "@/lib/supabase" // Actual path
-import { format, addDays, subDays, addMonths, subMonths, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns"
+import { format, addDays, subDays, startOfWeek, endOfWeek, eachDayOfInterval } from "date-fns"
+import { ja } from "date-fns/locale"
 
 // Mock Supabase
 jest.mock("@/lib/supabase", () => ({
@@ -57,8 +58,7 @@ describe("ReservationPage", () => {
     render(<ReservationPage />)
     expect(screen.getByText("予約画面")).toBeInTheDocument()
     expect(screen.getByTestId("icon-calendar-clock")).toBeInTheDocument()
-    expect(screen.getByText("週間")).toHaveAttribute("data-variant", "default") // shadcn/ui Button prop
-    expect(screen.getByText("月間")).toHaveAttribute("data-variant", "outline")
+    // Weekly view is the only mode
 
     // Check for current week display
     const weekStart = startOfWeek(today, { weekStartsOn: 1 })
@@ -68,33 +68,10 @@ describe("ReservationPage", () => {
     // Check table headers for the week
     const daysInWeek = eachDayOfInterval({ start: weekStart, end: weekEnd })
     for (const day of daysInWeek) {
-      expect(screen.getByText(format(day, "M/d (E)"))).toBeInTheDocument()
+      expect(screen.getByText(format(day, "EEEEE", { locale: ja }))).toBeInTheDocument()
     }
   })
 
-  test("switches to monthly view and back to weekly view", async () => {
-    render(<ReservationPage />)
-    fireEvent.click(screen.getByText("月間"))
-
-    await waitFor(() => {
-      expect(screen.getByText("月間")).toHaveAttribute("data-variant", "default")
-      expect(screen.getByText("週間")).toHaveAttribute("data-variant", "outline")
-    })
-
-    const monthStart = startOfMonth(today)
-    const monthEnd = endOfMonth(today)
-    expect(screen.getByText(`${format(monthStart, "yyyy年M月d日")} - ${format(monthEnd, "M月d日")}`)).toBeInTheDocument()
-    // Check for at least one day header of the month
-    expect(screen.getByText(format(monthStart, "M/d (E)"))).toBeInTheDocument()
-
-
-    fireEvent.click(screen.getByText("週間"))
-    await waitFor(() => {
-      expect(screen.getByText("週間")).toHaveAttribute("data-variant", "default")
-    })
-    const weekStart = startOfWeek(today, { weekStartsOn: 1 })
-    expect(screen.getByText(format(weekStart, "M/d (E)"))).toBeInTheDocument()
-  })
 
   test("navigates to next and previous week", async () => {
     render(<ReservationPage />)
@@ -103,7 +80,7 @@ describe("ReservationPage", () => {
 
     await waitFor(() => {
       const nextWeekStart = startOfWeek(addDays(today, 7), { weekStartsOn: 1 })
-      expect(screen.getByText(format(nextWeekStart, "M/d (E)"))).toBeInTheDocument()
+      expect(screen.getByText(format(nextWeekStart, "EEEEE", { locale: ja }))).toBeInTheDocument()
     })
 
     const prevWeekButton = screen.getAllByTestId("icon-chevron-left")[0].parentElement!
@@ -112,32 +89,10 @@ describe("ReservationPage", () => {
 
     await waitFor(() => {
       const prevWeekStart = startOfWeek(subDays(today, 7), { weekStartsOn: 1 })
-      expect(screen.getByText(format(prevWeekStart, "M/d (E)"))).toBeInTheDocument()
+      expect(screen.getByText(format(prevWeekStart, "EEEEE", { locale: ja }))).toBeInTheDocument()
     })
   })
 
-  test("navigates to next and previous month", async () => {
-    render(<ReservationPage />)
-    fireEvent.click(screen.getByText("月間"))
-    await waitFor(() => expect(screen.getByText("月間")).toHaveAttribute("data-variant", "default"))
-
-    const nextMonthButton = screen.getAllByTestId("icon-chevron-right")[0].parentElement!
-    fireEvent.click(nextMonthButton)
-
-    await waitFor(() => {
-      const nextMonthStart = startOfMonth(addMonths(today, 1))
-      expect(screen.getByText(format(nextMonthStart, "M/d (E)"))).toBeInTheDocument()
-    })
-
-    const prevMonthButton = screen.getAllByTestId("icon-chevron-left")[0].parentElement!
-    fireEvent.click(prevMonthButton) // Back to current month
-    fireEvent.click(prevMonthButton) // To previous month
-
-    await waitFor(() => {
-      const prevMonthStart = startOfMonth(subMonths(today, 1))
-      expect(screen.getByText(format(prevMonthStart, "M/d (E)"))).toBeInTheDocument()
-    })
-  })
 
   test("displays bookings correctly (〇 and ×)", async () => {
     const todayStr = format(today, "yyyy-MM-dd")
@@ -165,7 +120,7 @@ describe("ReservationPage", () => {
 
       // Check for '×' for today 11:00
       // The column index depends on where 'today' is in the week view
-      const todayFormattedHeader = format(today, "M/d (E)")
+      const todayFormattedHeader = format(today, "EEEEE", { locale: ja })
       const headerCells = screen.getAllByRole("columnheader")
       const todayColIndex = headerCells.findIndex(th => th.textContent === todayFormattedHeader)
 
@@ -177,7 +132,7 @@ describe("ReservationPage", () => {
       }
 
       // Check for '〇' for tomorrow 11:00 (assuming tomorrow is in view)
-      const tomorrowFormattedHeader = format(addDays(today,1), "M/d (E)")
+      const tomorrowFormattedHeader = format(addDays(today,1), "EEEEE", { locale: ja })
       const tomorrowColIndex = headerCells.findIndex(th => th.textContent === tomorrowFormattedHeader)
        if (time11Row && tomorrowColIndex > 0) {
         const cellsIn11Row = time11Row.querySelectorAll("td")
