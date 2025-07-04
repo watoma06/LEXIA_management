@@ -37,7 +37,7 @@ LEXIA会計ダッシュボードは、収入と支出を管理するためのシ
 
 ### 予約テーブルの例
 
-```
+\`\`\`
 id uuid primary key default uuid_generate_v4()
 patient_name text
 phone text
@@ -47,7 +47,7 @@ appointment_time text
 notes text
 status text default 'pending'
 created_at timestamp with time zone default now()
-```
+\`\`\`
 
 `project_progress`テーブルで並び順を保持するため、`sort_order int4`カラムを追加しておく必要があります。
 
