@@ -11,6 +11,7 @@ import {
   ChevronDown,
   Globe,
   BookOpen,
+  CalendarClock,
   Home,
   Package,
   LayoutDashboard,
@@ -97,6 +98,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <Link href="/subscriptions">
                 <Package className="h-4 w-4" />
                 サブスク管理
+              </Link>
+            </Button>
+            <Button asChild variant="ghost" className="w-full justify-start gap-2">
+              <Link href="/reservation-test">
+                <CalendarClock className="h-4 w-4" />
+                予約テスト
               </Link>
             </Button>
             <Button asChild variant="ghost" className="w-full justify-start gap-2">
