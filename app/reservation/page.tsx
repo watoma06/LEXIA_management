@@ -151,12 +151,12 @@ export default function ReservationPage() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border mb-6 text-center">
+        <table className="w-full border mb-6 text-center whitespace-nowrap">
           <thead>
             <tr className="border-b">
-              <th className="p-2 border-r w-24"></th> {/* Empty header cell */}
+              <th className="p-2 border-r w-24 h-12"></th> {/* Empty header cell */}
               {dateRange.map((day) => (
-                <th key={day.toString()} className="p-2 border-r w-24">
+                <th key={day.toString()} className="p-2 border-r w-24 h-12">
                   {format(day, "M/d (eee)", { locale: ja })}
                 </th>
               ))}
@@ -165,16 +165,16 @@ export default function ReservationPage() {
         <tbody>
           {TIMES.map((time) => (
             <tr key={time} className="border-b">
-              <td className="p-2 border-r">{time}</td>
+              <td className="p-2 border-r w-24 h-12">{time}</td>
               {dateRange.map((day) => {
                 const dayStr = format(day, "yyyy-MM-dd")
                 const booked = bookings.some(
                   (b) => b.appointment_date === dayStr && b.appointment_time === time,
                 )
                 return (
-                  <td key={day.toString() + time} className="p-2 border-r">
+                  <td key={day.toString() + time} className="p-2 border-r w-24 h-12">
                     {booked ? (
-                      <span className="text-red-500">×</span>
+                      <span className="text-red-500 inline-block w-8 h-8 flex items-center justify-center">×</span>
                     ) : (
                       <button
                         onClick={() => setSelectedSlot({ date: dayStr, time })}
