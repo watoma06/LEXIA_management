@@ -21,6 +21,7 @@ import {
   addMonths,
   subMonths,
 } from "date-fns"
+import { ja } from 'date-fns/locale'
 
 const TIMES = [
   "11:00",
@@ -153,10 +154,9 @@ export default function ReservationPage() {
         <table className="w-full border mb-6 text-center">
           <thead>
             <tr className="border-b">
-              <th className="p-2 border-r">時間</th>
             {dateRange.map((day) => (
-              <th key={day.toString()} className="p-2 border-r">
-                {format(day, "M/d (E)")}
+              <th key={day.toString()} className="p-2 border-r w-24">
+                {format(day, "M/d (eee)", { locale: ja })}
               </th>
             ))}
           </tr>
