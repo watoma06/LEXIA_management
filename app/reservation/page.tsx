@@ -149,10 +149,11 @@ export default function ReservationPage() {
         </div>
       </div>
 
-      <table className="w-full border mb-6 text-center">
-        <thead>
-          <tr className="border-b">
-            <th className="p-2 border-r">時間</th>
+      <div className="overflow-x-auto">
+        <table className="w-full border mb-6 text-center">
+          <thead>
+            <tr className="border-b">
+              <th className="p-2 border-r">時間</th>
             {dateRange.map((day) => (
               <th key={day.toString()} className="p-2 border-r">
                 {format(day, "M/d (E)")}
@@ -176,7 +177,7 @@ export default function ReservationPage() {
                     ) : (
                       <button
                         onClick={() => setSelectedSlot({ date: dayStr, time })}
-                        className="text-green-500 text-lg hover:bg-green-100 rounded-full w-8 h-8 flex items-center justify-center"
+                        className="text-green-500 text-lg hover:bg-green-100 rounded-full w-8 h-8 flex items-center justify-center mx-auto"
                       >
                         〇
                       </button>
@@ -187,7 +188,8 @@ export default function ReservationPage() {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       <div className="mb-4">
         <h3 className="font-semibold">凡例:</h3>
