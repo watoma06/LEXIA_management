@@ -199,6 +199,14 @@ export default function KgiKpiPage() {
     )
   }, [records])
 
+  // 進行中プロジェクトの売上見込み
+  const upcomingRevenue = useMemo(() => {
+    return projects
+      .filter((p) => p.status !== "完了")
+      .reduce((sum, p) => sum + p.unit_price, 0)
+  }, [projects])
+
+
 
 
   return (
