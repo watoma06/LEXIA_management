@@ -154,42 +154,44 @@ export default function ReservationPage() {
         <table className="w-full border mb-6 text-center">
           <thead>
             <tr className="border-b">
-              <th className="p-2 border-r w-24 h-24 align-middle"></th> {/* Empty header cell */}
-              {dateRange.map((day) => (
-                <th key={day.toString()} className="p-2 border-r w-24 h-24 align-middle">
-                  <div>{format(day, "M/d", { locale: ja })}</div>
-                  <div>({format(day, "EEEEE", { locale: ja })})</div>
+              <th className="p-2 border-r w-24 h-24 align-middle"></th>
+              {TIMES.map((time) => (
+                <th key={time} className="p-2 border-r w-24 h-24 align-middle">
+                  {time}
                 </th>
               ))}
             </tr>
           </thead>
-        <tbody>
-          {TIMES.map((time) => (
-            <tr key={time} className="border-b">
-              <td className="p-2 border-r w-24 h-24 align-middle">{time}</td>
-              {dateRange.map((day) => {
-                const dayStr = format(day, "yyyy-MM-dd")
-                const booked = bookings.some(
-                  (b) => b.appointment_date === dayStr && b.appointment_time === time,
-                )
-                return (
-                  <td key={day.toString() + time} className="p-2 border-r w-24 h-24 flex items-center justify-center">
-                    {booked ? (
-                      <span className="text-red-500 text-lg w-8 h-8 flex items-center justify-center">×</span>
-                    ) : (
-                      <button
-                        onClick={() => setSelectedSlot({ date: dayStr, time })}
-                        className="text-green-500 text-lg hover:bg-green-100 rounded-full w-8 h-8 flex items-center justify-center"
-                      >
-                        〇
-                      </button>
-                    )}
-                  </td>
-                )
-              })}
-            </tr>
-          ))}
-        </tbody>
+          <tbody>
+            {dateRange.map((day) => (
+              <tr key={day.toString()} className="border-b">
+                <td className="p-2 border-r w-24 h-24 align-middle">
+                  <div>{format(day, "M/d", { locale: ja })}</div>
+                  <div>({format(day, "EEEEE", { locale: ja })})</div>
+                </td>
+                {TIMES.map((time) => {
+                  const dayStr = format(day, "yyyy-MM-dd")
+                  const booked = bookings.some(
+                    (b) => b.appointment_date === dayStr && b.appointment_time === time,
+                  )
+                  return (
+                    <td key={time + day.toString()} className="p-2 border-r w-24 h-24 flex items-center justify-center">
+                      {booked ? (
+                        <span className="text-red-500 text-lg w-8 h-8 flex items-center justify-center">×</span>
+                      ) : (
+                        <button
+                          onClick={() => setSelectedSlot({ date: dayStr, time })}
+                          className="text-green-500 text-lg hover:bg-green-100 rounded-full w-8 h-8 flex items-center justify-center"
+                        >
+                          〇
+                        </button>
+                      )}
+                    </td>
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 

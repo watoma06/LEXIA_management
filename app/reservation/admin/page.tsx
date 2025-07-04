@@ -132,47 +132,49 @@ export default function ReservationAdminPage() {
           <table className="w-full text-center">
             <thead className="bg-gray-50">
               <tr className="border-b">
-                <th className="p-2 border-r sticky left-0 bg-gray-50 z-10 text-xs sm:text-sm font-medium text-gray-600">時間</th>
-                {dateRange.map((day) => (
-                  <th key={day.toString()} className="p-2 border-r min-w-[80px] sm:min-w-[100px] text-xs sm:text-sm font-medium text-gray-600">
-                    {format(day, "M/d")} <span className="hidden sm:inline">({format(day, "E")})</span>
+                <th className="p-2 border-r sticky left-0 bg-gray-50 z-10 text-xs sm:text-sm font-medium text-gray-600">日付</th>
+                {TIMES.map((time) => (
+                  <th key={time} className="p-2 border-r min-w-[80px] sm:min-w-[100px] text-xs sm:text-sm font-medium text-gray-600">
+                    {time}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {TIMES.map((time) => (
-                <tr key={time} className="border-b last:border-b-0">
-                  <td className="p-2 border-r sticky left-0 bg-white z-10 text-xs sm:text-sm text-gray-700">{time}</td>
-                  {dateRange.map((day) => {
-                    const dayStr = format(day, "yyyy-MM-dd");
-                    const booking = bookings.find(
-                      (b) => b.appointment_date === dayStr && b.appointment_time === time,
-                    );
-                    const cellClasses = cn(
-                      "p-1 sm:p-2 border-r h-16 transition-colors",
-                      booking ? "bg-sky-50 hover:bg-sky-100" : "hover:bg-gray-50",
-                      "last:border-r-0"
-                    );
-                    return (
-                      <td key={day.toString() + time} className={cellClasses}>
-                        {booking ? (
-                          <DialogTrigger asChild>
-                            <div
-                              className="text-[10px] sm:text-xs cursor-pointer h-full flex items-center justify-center p-1 rounded hover:ring-1 hover:ring-sky-300"
-                              onClick={() => setSelectedBooking(booking)}
-                            >
-                              {booking.patient_name}
-                            </div>
-                          </DialogTrigger>
-                        ) : (
-                          <div className="h-full w-full"></div>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
+{dateRange.map((day) => (
+  <tr key={day.toString()} className="border-b last:border-b-0">
+    <td className="p-2 border-r sticky left-0 bg-white z-10 text-xs sm:text-sm text-gray-700">
+      {format(day, "M/d")} <span className="hidden sm:inline">({format(day, "E")})</span>
+    </td>
+    {TIMES.map((time) => {
+      const dayStr = format(day, "yyyy-MM-dd");
+      const booking = bookings.find(
+        (b) => b.appointment_date === dayStr && b.appointment_time === time,
+      );
+      const cellClasses = cn(
+        "p-1 sm:p-2 border-r h-16 transition-colors",
+        booking ? "bg-sky-50 hover:bg-sky-100" : "hover:bg-gray-50",
+        "last:border-r-0",
+      );
+      return (
+        <td key={time + day.toString()} className={cellClasses}>
+          {booking ? (
+            <DialogTrigger asChild>
+              <div
+                className="text-[10px] sm:text-xs cursor-pointer h-full flex items-center justify-center p-1 rounded hover:ring-1 hover:ring-sky-300"
+                onClick={() => setSelectedBooking(booking)}
+              >
+                {booking.patient_name}
+              </div>
+            </DialogTrigger>
+          ) : (
+            <div className="h-full w-full"></div>
+          )}
+        </td>
+      );
+    })}
+  </tr>
+))}
             </tbody>
           </table>
         </div>
