@@ -154,13 +154,14 @@ export default function ReservationPage() {
         <table className="w-full border mb-6 text-center">
           <thead>
             <tr className="border-b">
-            {dateRange.map((day) => (
-              <th key={day.toString()} className="p-2 border-r w-24">
-                {format(day, "M/d (eee)", { locale: ja })}
-              </th>
-            ))}
-          </tr>
-        </thead>
+              <th className="p-2 border-r w-24"></th> {/* Empty header cell */}
+              {dateRange.map((day) => (
+                <th key={day.toString()} className="p-2 border-r w-24">
+                  {format(day, "M/d (eee)", { locale: ja })}
+                </th>
+              ))}
+            </tr>
+          </thead>
         <tbody>
           {TIMES.map((time) => (
             <tr key={time} className="border-b">
