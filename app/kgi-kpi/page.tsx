@@ -199,27 +199,14 @@ export default function KgiKpiPage() {
     )
   }, [records])
 
-
   const upcomingRevenue = useMemo(() => {
     return projects
       .filter((p) => p.status !== "完了")
       .reduce((sum, p) => sum + p.unit_price, 0)
   }, [projects])
 
-  const dueSoon = useMemo(() => {
-    const now = Date.now()
-    const week = 7 * 86400000
-    return projects.filter(
-      (p) =>
-        p.status !== "完了" &&
-        new Date(p.due_date).getTime() - now <= week &&
-        new Date(p.due_date).getTime() - now >= 0
-    ).length
-  }, [projects])
 
-  const month = new Date().getMonth() + 1
-  const predicted = Math.round((kgiCurrent / month) * 12)
-  const predictedWithProjects = predicted + upcomingRevenue
+
 
   return (
     <DashboardLayout>
