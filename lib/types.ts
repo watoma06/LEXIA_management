@@ -8,3 +8,14 @@ export interface Subscription {
   item: string
   notes: string
 }
+
+export interface Booking {
+  id: string
+  patient_name: string
+  phone: string
+  email: string
+  appointment_date: string
+  appointment_time: string
+  notes: string
+  status: string
+}
