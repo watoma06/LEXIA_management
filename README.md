@@ -46,19 +46,19 @@ LEXIA management systemは、LEXIAの業務管理を効率化するための総�
 
 ### ローカル開発環境の構築手順
 1. リポジトリをクローンします:
-   ```bash
+   \`\`\`bash
    git clone <repository-url>
    cd <repository-directory>
-   ```
+   \`\`\`
 2. 必要なパッケージをインストールします:
-   ```bash
+   \`\`\`bash
    pnpm install
-   ```
+   \`\`\`
 3. `.env.local`ファイルを作成し、上記の「環境変数の設定」に従って設定します。
 4. 開発サーバーを起動します:
-   ```bash
+   \`\`\`bash
    pnpm dev
-   ```
+   \`\`\`
    アプリケーションは `http://localhost:3000` で起動します。
 
 ## 動作原理
@@ -103,20 +103,20 @@ created_at timestamp with time zone default now()
 
 ### プルリクエストの手順
 1. 最新の`main`ブランチから作業ブランチを作成します。
-   ```bash
+   \`\`\`bash
    git checkout main
    git pull origin main
    git checkout -b feature/your-feature-name
-   ```
+   \`\`\`
 2. 変更を行い、コミットします。コミットメッセージは分かりやすく記載してください。
-   ```bash
+   \`\`\`bash
    git add .
    git commit -m "feat: Implement new feature"
-   ```
+   \`\`\`
 3. 作業ブランチをリモートリポジトリにプッシュします。
-   ```bash
+   \`\`\`bash
    git push origin feature/your-feature-name
-   ```
+   \`\`\`
 4. GitHub上でプルリクエストを作成し、レビューを依頼します。
 5. レビューでの指摘事項を修正し、マージされるのを待ちます。
 
