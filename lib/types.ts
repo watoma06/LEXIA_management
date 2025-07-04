@@ -8,3 +8,10 @@ export interface Subscription {
   item: string
   notes: string
 }
+
+export interface Booking {
+  id: string
+  name: string
+  date: string
+  notes?: string
+}
