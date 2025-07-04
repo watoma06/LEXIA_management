@@ -5,7 +5,9 @@ import DashboardLayout from "@/components/dashboard-layout"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import { CalendarClock } from "lucide-react"
 import { supabase, BOOKINGS_TABLE } from "@/lib/supabase"
+import type { Booking } from "@/lib/types"
 import Link from "next/link"
 
 const TIMES = [
@@ -23,7 +25,7 @@ const TIMES = [
 
 export default function ReservationPage() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10))
-  const [bookings, setBookings] = useState<any[]>([])
+  const [bookings, setBookings] = useState<Booking[]>([])
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [form, setForm] = useState({
     name: "",
@@ -39,6 +41,7 @@ export default function ReservationPage() {
       .select("*")
       .eq("appointment_date", date)
       .then(({ data }) => setBookings(data ?? []))
+      .catch(() => setBookings([]))
   }, [date])
 
   const handleSubmit = async () => {
@@ -68,7 +71,9 @@ export default function ReservationPage() {
 
   return (
     <DashboardLayout>
-      <h1 className="text-2xl font-bold mb-4">予約画面</h1>
+      <h1 className="text-2xl font-bold mb-4 flex items-center gap-2">
+        <CalendarClock />予約画面
+      </h1>
       <div className="mb-4 max-w-xs">
         <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
       </div>
@@ -121,6 +126,26 @@ export default function ReservationPage() {
       <Link href="/reservation/admin" className="text-sm underline">
         管理画面へ
       </Link>
+      <div className="w-full max-w-md mt-6">
+        <h2 className="font-semibold mb-2">予約リスト</h2>
+        <ul className="space-y-1">
+          {bookings.map((b) => (
+            <li key={b.id} className="border p-2 rounded">
+              <span>
+                {b.patient_name} - {b.appointment_date} {b.appointment_time}
+              </span>
+              {b.notes && (
+                <span className="block text-sm text-muted-foreground">
+                  {b.notes}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+        {bookings.length === 0 && (
+          <p className="text-sm text-muted-foreground">予約はありません</p>
+        )}
+      </div>
     </DashboardLayout>
   )
 }
