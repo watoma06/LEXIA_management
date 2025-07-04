@@ -17,6 +17,7 @@ import {
   Package,
   LayoutDashboard,
   BookOpen,
+  CalendarClock,
   Menu,
   Settings,
   Wallet,
