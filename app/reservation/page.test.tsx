@@ -68,7 +68,11 @@ describe("ReservationPage", () => {
     // Check table headers for the week
     const daysInWeek = eachDayOfInterval({ start: weekStart, end: weekEnd })
     for (const day of daysInWeek) {
-      expect(screen.getByText(format(day, "M/d (E)"))).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          `${format(day, "M/d")}(${format(day, "E", { locale: ja })})`
+        )
+      ).toBeInTheDocument()
     }
   })
 
@@ -85,7 +89,11 @@ describe("ReservationPage", () => {
     const monthEnd = endOfMonth(today)
     expect(screen.getByText(`${format(monthStart, "yyyy年M月d日")} - ${format(monthEnd, "M月d日")}`)).toBeInTheDocument()
     // Check for at least one day header of the month
-    expect(screen.getByText(format(monthStart, "M/d (E)"))).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        `${format(monthStart, "M/d")}(${format(monthStart, "E", { locale: ja })})`
+      )
+    ).toBeInTheDocument()
 
 
     fireEvent.click(screen.getByText("週間"))
@@ -93,7 +101,11 @@ describe("ReservationPage", () => {
       expect(screen.getByText("週間")).toHaveAttribute("data-variant", "default")
     })
     const weekStart = startOfWeek(today, { weekStartsOn: 1 })
-    expect(screen.getByText(format(weekStart, "M/d (E)"))).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        `${format(weekStart, "M/d")}(${format(weekStart, "E", { locale: ja })})`
+      )
+    ).toBeInTheDocument()
   })
 
   test("navigates to next and previous week", async () => {
@@ -103,7 +115,11 @@ describe("ReservationPage", () => {
 
     await waitFor(() => {
       const nextWeekStart = startOfWeek(addDays(today, 7), { weekStartsOn: 1 })
-      expect(screen.getByText(format(nextWeekStart, "M/d (E)"))).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          `${format(nextWeekStart, "M/d")}(${format(nextWeekStart, "E", { locale: ja })})`
+        )
+      ).toBeInTheDocument()
     })
 
     const prevWeekButton = screen.getAllByTestId("icon-chevron-left")[0].parentElement!
@@ -112,7 +128,11 @@ describe("ReservationPage", () => {
 
     await waitFor(() => {
       const prevWeekStart = startOfWeek(subDays(today, 7), { weekStartsOn: 1 })
-      expect(screen.getByText(format(prevWeekStart, "M/d (E)"))).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          `${format(prevWeekStart, "M/d")}(${format(prevWeekStart, "E", { locale: ja })})`
+        )
+      ).toBeInTheDocument()
     })
   })
 
@@ -126,7 +146,11 @@ describe("ReservationPage", () => {
 
     await waitFor(() => {
       const nextMonthStart = startOfMonth(addMonths(today, 1))
-      expect(screen.getByText(format(nextMonthStart, "M/d (E)"))).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          `${format(nextMonthStart, "M/d")}(${format(nextMonthStart, "E", { locale: ja })})`
+        )
+      ).toBeInTheDocument()
     })
 
     const prevMonthButton = screen.getAllByTestId("icon-chevron-left")[0].parentElement!
@@ -135,7 +159,11 @@ describe("ReservationPage", () => {
 
     await waitFor(() => {
       const prevMonthStart = startOfMonth(subMonths(today, 1))
-      expect(screen.getByText(format(prevMonthStart, "M/d (E)"))).toBeInTheDocument()
+      expect(
+        screen.getByText(
+          `${format(prevMonthStart, "M/d")}(${format(prevMonthStart, "E", { locale: ja })})`
+        )
+      ).toBeInTheDocument()
     })
   })
 
@@ -165,7 +193,7 @@ describe("ReservationPage", () => {
 
       // Check for '×' for today 11:00
       // The column index depends on where 'today' is in the week view
-      const todayFormattedHeader = format(today, "M/d (E)")
+      const todayFormattedHeader = `${format(today, "M/d")}(${format(today, "E", { locale: ja })})`
       const headerCells = screen.getAllByRole("columnheader")
       const todayColIndex = headerCells.findIndex(th => th.textContent === todayFormattedHeader)
 
@@ -177,7 +205,7 @@ describe("ReservationPage", () => {
       }
 
       // Check for '〇' for tomorrow 11:00 (assuming tomorrow is in view)
-      const tomorrowFormattedHeader = format(addDays(today,1), "M/d (E)")
+      const tomorrowFormattedHeader = `${format(addDays(today,1), "M/d")}(${format(addDays(today,1), "E", { locale: ja })})`
       const tomorrowColIndex = headerCells.findIndex(th => th.textContent === tomorrowFormattedHeader)
        if (time11Row && tomorrowColIndex > 0) {
         const cellsIn11Row = time11Row.querySelectorAll("td")

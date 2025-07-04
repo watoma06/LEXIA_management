@@ -157,7 +157,8 @@ export default function ReservationPage() {
               <th className="p-2 border-r w-24 h-24 align-middle"></th> {/* Empty header cell */}
               {dateRange.map((day) => (
                 <th key={day.toString()} className="p-2 border-r w-24 h-24 align-middle">
-                  {format(day, "M/d (EEEEE)", { locale: ja })}
+                  <div>{format(day, "M/d", { locale: ja })}</div>
+                  <div>({format(day, "EEEEE", { locale: ja })})</div>
                 </th>
               ))}
             </tr>
