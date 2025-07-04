@@ -23,5 +23,7 @@ export default function RootLayout({
 }
 
 export const metadata = {
-      generator: 'v0.dev'
-    };
+  generator: 'v0.dev',
+  // 既存のプレースホルダーロゴをファビコンとして使用
+  icons: [{ rel: 'icon', url: '/placeholder-logo.png' }],
+};
