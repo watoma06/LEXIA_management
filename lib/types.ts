@@ -11,5 +11,12 @@ export interface Subscription {
 
 export interface Booking {
   id: string
-
+  patient_name: string
+  phone: string
+  email: string
+  appointment_date: string
+  appointment_time: string
+  notes: string | null
+  status: string
+  created_at: string
 }

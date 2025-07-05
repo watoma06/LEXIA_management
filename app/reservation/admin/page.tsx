@@ -56,8 +56,8 @@ export default function ReservationAdminPage() {
     [currentDate, viewMode]
   );
 
-  useEffect(() => {
-    setLoading(true); // Set loading to true when effect runs
+  const fetchBookings = () => {
+    setLoading(true);
     const startDate = format(dateRange[0], "yyyy-MM-dd");
     const endDate = format(dateRange[dateRange.length - 1], "yyyy-MM-dd");
 
@@ -77,6 +77,27 @@ export default function ReservationAdminPage() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchBookings();
+  }, [currentDate, viewMode]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("booking_updates")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: BOOKINGS_TABLE },
+        () => {
+          fetchBookings();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [currentDate, viewMode]);
 
   const handlePrev = () => {
