@@ -13,7 +13,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import {
@@ -157,14 +156,12 @@ export default function ReservationAdminPage() {
                     return (
                       <td key={day.toString() + time} className={cellClasses}>
                         {booking ? (
-                          <DialogTrigger asChild>
-                            <div
-                              className="text-[10px] sm:text-xs cursor-pointer h-full flex items-center justify-center p-1 rounded hover:ring-1 hover:ring-sky-300"
-                              onClick={() => setSelectedBooking(booking)}
-                            >
-                              {booking.patient_name}
-                            </div>
-                          </DialogTrigger>
+                          <div
+                            className="text-[10px] sm:text-xs cursor-pointer h-full flex items-center justify-center p-1 rounded hover:ring-1 hover:ring-sky-300"
+                            onClick={() => setSelectedBooking(booking)}
+                          >
+                            {booking.patient_name}
+                          </div>
                         ) : (
                           <div className="h-full w-full"></div>
                         )}
