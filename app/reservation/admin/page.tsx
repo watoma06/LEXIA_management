@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import DashboardLayout from "@/components/dashboard-layout"
 import { supabase, BOOKINGS_TABLE } from "@/lib/supabase"
 import type { Booking } from "@/lib/types"
@@ -42,10 +42,19 @@ export default function ReservationAdminPage() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true); // Added loading state
 
-  const dateRange =
-    viewMode === "weekly"
-      ? eachDayOfInterval({ start: startOfWeek(currentDate, { weekStartsOn: 1 }), end: endOfWeek(currentDate, { weekStartsOn: 1 }) })
-      : eachDayOfInterval({ start: startOfMonth(currentDate), end: endOfMonth(currentDate) });
+  const dateRange = useMemo(
+    () =>
+      viewMode === "weekly"
+        ? eachDayOfInterval({
+            start: startOfWeek(currentDate, { weekStartsOn: 1 }),
+            end: endOfWeek(currentDate, { weekStartsOn: 1 }),
+          })
+        : eachDayOfInterval({
+            start: startOfMonth(currentDate),
+            end: endOfMonth(currentDate),
+          }),
+    [currentDate, viewMode]
+  );
 
   useEffect(() => {
     setLoading(true); // Set loading to true when effect runs
@@ -68,7 +77,7 @@ export default function ReservationAdminPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [currentDate, viewMode, dateRange]);
+  }, [currentDate, viewMode]);
 
   const handlePrev = () => {
     if (viewMode === "weekly") {

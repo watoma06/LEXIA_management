@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import DashboardLayout from "@/components/dashboard-layout"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -51,10 +51,19 @@ export default function ReservationPage() {
   })
   const [message, setMessage] = useState<string | null>(null)
 
-  const dateRange =
-    viewMode === "weekly"
-      ? eachDayOfInterval({ start: startOfWeek(currentDate, { weekStartsOn: 1 }), end: endOfWeek(currentDate, { weekStartsOn: 1 }) })
-      : eachDayOfInterval({ start: startOfMonth(currentDate), end: endOfMonth(currentDate) })
+  const dateRange = useMemo(
+    () =>
+      viewMode === "weekly"
+        ? eachDayOfInterval({
+            start: startOfWeek(currentDate, { weekStartsOn: 1 }),
+            end: endOfWeek(currentDate, { weekStartsOn: 1 }),
+          })
+        : eachDayOfInterval({
+            start: startOfMonth(currentDate),
+            end: endOfMonth(currentDate),
+          }),
+    [currentDate, viewMode]
+  )
 
   useEffect(() => {
     const startDate = format(dateRange[0], "yyyy-MM-dd")
@@ -67,7 +76,7 @@ export default function ReservationPage() {
       .lte("appointment_date", endDate)
       .then(({ data }) => setBookings(data ?? []))
       .catch(() => setBookings([]))
-  }, [currentDate, viewMode, dateRange])
+  }, [currentDate, viewMode])
 
   const handlePrev = () => {
     if (viewMode === "weekly") {
