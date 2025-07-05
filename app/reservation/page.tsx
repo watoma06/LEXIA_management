@@ -5,6 +5,14 @@ import DashboardLayout from "@/components/dashboard-layout"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog"
 import { CalendarClock, ChevronLeft, ChevronRight } from "lucide-react"
 import { supabase, BOOKINGS_TABLE } from "@/lib/supabase"
 import type { Booking } from "@/lib/types"
@@ -238,32 +246,38 @@ export default function ReservationPage() {
       </div>
 
       {selectedSlot && (
-        <div className="grid gap-4 max-w-md mb-4">
-          <h2 className="font-semibold">
-            {selectedSlot.date} {selectedSlot.time} の予約
-          </h2>
-          <div className="grid gap-2">
-            <label className="text-sm">お名前</label>
-            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-          </div>
-          <div className="grid gap-2">
-            <label className="text-sm">電話番号</label>
-            <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-          </div>
-          <div className="grid gap-2">
-            <label className="text-sm">メール</label>
-            <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-          </div>
-          <div className="grid gap-2">
-            <label className="text-sm">備考</label>
-            <Textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
-          </div>
-          <Button onClick={handleSubmit}>予約する</Button>
-          <Button variant="outline" onClick={() => setSelectedSlot(null)}>
-            キャンセル
-          </Button>
-          {message && <p className="text-sm text-destructive">{message}</p>}
-        </div>
+        <Dialog open={!!selectedSlot} onOpenChange={(isOpen) => { if (!isOpen) setSelectedSlot(null); }}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>{selectedSlot.date} {selectedSlot.time} の予約</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <label className="text-sm">お名前</label>
+                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm">電話番号</label>
+                <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm">メール</label>
+                <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              </div>
+              <div className="grid gap-2">
+                <label className="text-sm">備考</label>
+                <Textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+              </div>
+              {message && <p className="text-sm text-destructive">{message}</p>}
+            </div>
+            <DialogFooter>
+              <Button onClick={handleSubmit}>予約する</Button>
+              <DialogClose asChild>
+                <Button variant="outline" onClick={() => setSelectedSlot(null)}>キャンセル</Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
       <Link href="/reservation/admin" className="text-sm underline">
         管理画面へ

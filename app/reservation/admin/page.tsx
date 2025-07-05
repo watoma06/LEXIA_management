@@ -41,6 +41,12 @@ export default function ReservationAdminPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true); // Added loading state
+  const handleDelete = async () => {
+    if (!selectedBooking) return;
+    await supabase.from(BOOKINGS_TABLE).delete().eq("id", selectedBooking.id);
+    setSelectedBooking(null);
+    fetchBookings();
+  };
 
   const dateRange = useMemo(
     () =>
@@ -242,6 +248,9 @@ export default function ReservationAdminPage() {
               <DialogClose asChild>
                 <Button type="button" variant="outline" onClick={() => setSelectedBooking(null)}>閉じる</Button>
               </DialogClose>
+              <Button type="button" variant="destructive" onClick={handleDelete}>
+                削除
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
