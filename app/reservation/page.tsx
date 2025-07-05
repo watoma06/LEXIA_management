@@ -50,6 +50,8 @@ export default function ReservationPage() {
     notes: "",
   })
   const [message, setMessage] = useState<string | null>(null)
+  // State for mobile single-day view
+  const [mobileDate, setMobileDate] = useState(new Date())
 
   const dateRange =
     viewMode === "weekly"
@@ -83,6 +85,18 @@ export default function ReservationPage() {
     } else {
       setCurrentDate(addMonths(currentDate, 1))
     }
+  }
+
+  const handleMobilePrev = () => {
+    const newDate = subDays(mobileDate, 1)
+    setMobileDate(newDate)
+    setCurrentDate(newDate)
+  }
+
+  const handleMobileNext = () => {
+    const newDate = addDays(mobileDate, 1)
+    setMobileDate(newDate)
+    setCurrentDate(newDate)
   }
 
   const handleSubmit = async () => {
@@ -121,7 +135,7 @@ export default function ReservationPage() {
         予約画面
       </h1>
 
-      <div className="mb-4 flex justify-between items-center">
+      <div className="mb-4 flex justify-between items-center hidden sm:flex">
         <div>
           <Button variant="outline" onClick={handlePrev} className="mr-2">
             <ChevronLeft size={20} />
@@ -150,7 +164,22 @@ export default function ReservationPage() {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      {/* Mobile navigation */}
+      <div className="mb-4 flex justify-between items-center sm:hidden">
+        <div>
+          <Button variant="outline" onClick={handleMobilePrev} className="mr-2">
+            <ChevronLeft size={20} />
+          </Button>
+          <Button variant="outline" onClick={handleMobileNext}>
+            <ChevronRight size={20} />
+          </Button>
+          <span className="ml-4 font-semibold">
+            {format(mobileDate, "yyyy年M月d日 (E)", { locale: ja })}
+          </span>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto hidden sm:block">
         <table className="w-full border mb-6 text-center">
           <thead>
             <tr className="border-b">
@@ -191,6 +220,50 @@ export default function ReservationPage() {
                 })}
               </tr>
             ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile single day table */}
+      <div className="sm:hidden overflow-x-auto mb-6">
+        <table className="w-full border text-center">
+          <thead>
+            <tr className="border-b">
+              <th className="p-2 border-r w-24 h-24 align-middle"></th>
+              {TIMES.map((time) => (
+                <th key={time} className="p-2 border-r w-24 h-24 align-middle">
+                  {time}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b">
+              <td className="p-2 border-r w-24 h-24 align-middle">
+                <div>{format(mobileDate, "M/d", { locale: ja })}</div>
+                <div>({format(mobileDate, "EEEEE", { locale: ja })})</div>
+              </td>
+              {TIMES.map((time) => {
+                const dayStr = format(mobileDate, "yyyy-MM-dd")
+                const booked = bookings.some(
+                  (b) => b.appointment_date === dayStr && b.appointment_time === time,
+                )
+                return (
+                  <td key={time} className="p-2 border-r w-24 h-24 flex items-center justify-center">
+                    {booked ? (
+                      <span className="text-red-500 text-lg w-8 h-8 flex items-center justify-center">×</span>
+                    ) : (
+                      <button
+                        onClick={() => setSelectedSlot({ date: dayStr, time })}
+                        className="text-green-500 text-lg hover:bg-green-100 rounded-full w-8 h-8 flex items-center justify-center"
+                      >
+                        〇
+                      </button>
+                    )}
+                  </td>
+                )
+              })}
+            </tr>
           </tbody>
         </table>
       </div>
