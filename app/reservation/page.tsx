@@ -22,6 +22,7 @@ import {
   subMonths,
 } from "date-fns"
 import { ja } from 'date-fns/locale'
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const TIMES = [
   "11:00",
@@ -36,9 +37,10 @@ const TIMES = [
   "20:00",
 ]
 
-type ViewMode = "weekly" | "monthly"
+type ViewMode = "daily" | "weekly" | "monthly"
 
 export default function ReservationPage() {
+  const isMobile = useIsMobile()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [viewMode, setViewMode] = useState<ViewMode>("weekly")
   const [bookings, setBookings] = useState<Booking[]>([])
@@ -51,9 +53,19 @@ export default function ReservationPage() {
   })
   const [message, setMessage] = useState<string | null>(null)
 
+  useEffect(() => {
+    if (isMobile) {
+      setViewMode("daily")
+    } else if (viewMode === "daily") {
+      setViewMode("weekly")
+    }
+  }, [isMobile, viewMode])
+
   const dateRange = useMemo(
     () =>
-      viewMode === "weekly"
+      viewMode === "daily"
+        ? eachDayOfInterval({ start: currentDate, end: currentDate })
+        : viewMode === "weekly"
         ? eachDayOfInterval({
             start: startOfWeek(currentDate, { weekStartsOn: 1 }),
             end: endOfWeek(currentDate, { weekStartsOn: 1 }),
@@ -79,7 +91,9 @@ export default function ReservationPage() {
   }, [currentDate, viewMode])
 
   const handlePrev = () => {
-    if (viewMode === "weekly") {
+    if (viewMode === "daily") {
+      setCurrentDate(subDays(currentDate, 1))
+    } else if (viewMode === "weekly") {
       setCurrentDate(subDays(currentDate, 7))
     } else {
       setCurrentDate(subMonths(currentDate, 1))
@@ -87,7 +101,9 @@ export default function ReservationPage() {
   }
 
   const handleNext = () => {
-    if (viewMode === "weekly") {
+    if (viewMode === "daily") {
+      setCurrentDate(addDays(currentDate, 1))
+    } else if (viewMode === "weekly") {
       setCurrentDate(addDays(currentDate, 7))
     } else {
       setCurrentDate(addMonths(currentDate, 1))
@@ -138,11 +154,23 @@ export default function ReservationPage() {
           <Button variant="outline" onClick={handleNext}>
             <ChevronRight size={20} />
           </Button>
+          <Button variant="outline" onClick={() => setCurrentDate(new Date())} className="ml-2">
+            今日
+          </Button>
           <span className="ml-4 font-semibold">
-            {format(dateRange[0], "yyyy年M月d日")} - {format(dateRange[dateRange.length - 1], "M月d日")}
+            {viewMode === "daily"
+              ? format(dateRange[0], "yyyy年M月d日")
+              : `${format(dateRange[0], "yyyy年M月d日")} - ${format(dateRange[dateRange.length - 1], "M月d日")}`}
           </span>
         </div>
         <div>
+          <Button
+            variant={viewMode === "daily" ? "default" : "outline"}
+            onClick={() => setViewMode("daily")}
+            className="mr-2"
+          >
+            日別
+          </Button>
           <Button
             variant={viewMode === "weekly" ? "default" : "outline"}
             onClick={() => setViewMode("weekly")}
