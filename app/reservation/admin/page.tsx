@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import { useToast } from "@/hooks/use-toast"
 import DashboardLayout from "@/components/dashboard-layout"
 import { supabase, BOOKINGS_TABLE } from "@/lib/supabase"
 import type { Booking } from "@/lib/types"
@@ -41,6 +42,7 @@ export default function ReservationAdminPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true); // Added loading state
+  const { toast } = useToast();
   const handleDelete = async () => {
     if (!selectedBooking) return;
     await supabase.from(BOOKINGS_TABLE).delete().eq("id", selectedBooking.id);
@@ -79,6 +81,11 @@ export default function ReservationAdminPage() {
       })
       .catch(() => {
         setBookings([]);
+        toast({
+          title: "エラー",
+          description: "予約情報を取得できませんでした",
+          variant: "destructive",
+        });
       })
       .finally(() => {
         setLoading(false);
