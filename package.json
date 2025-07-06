@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@edge-runtime/vm": "latest",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
@@ -43,6 +44,9 @@
     "@testing-library/dom": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
+    "@types/debug": "latest",
+    "@vitest/browser": "latest",
+    "@vitest/ui": "latest",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -50,6 +54,7 @@
     "date-fns": "latest",
     "embla-carousel-react": "latest",
     "fs": "latest",
+    "happy-dom": "latest",
     "input-otp": "latest",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
@@ -67,6 +72,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "latest",
+    "vite": "latest",
     "zod": "^3.24.1"
   },
   "devDependencies": {
