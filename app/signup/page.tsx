@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, FormEvent } from "react"
+import { z } from "zod"
 import { useAuth } from "@/context/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -23,11 +24,24 @@ export default function SignUpPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    const schema = z.object({
+      email: z.string().email(),
+      password: z.string().min(8),
+    })
+
+    const result = schema.safeParse({ email, password })
+    if (!result.success) {
+      setError("入力が正しくありません")
+      return
+    }
+
     try {
       await signUp(email, password)
       setOpen(true)
     } catch (err: any) {
-      setError(err.message)
+      console.error(err)
+      setError("登録に失敗しました")
     }
   }
 

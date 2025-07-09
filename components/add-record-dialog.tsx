@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, ChangeEvent, useEffect } from "react"
+import { z } from "zod"
 import Papa from "papaparse"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -54,9 +55,24 @@ export function AddRecordDialog({ onAdd, onImport }: AddRecordDialogProps) {
   }
 
   const handleSubmit = () => {
+    const schema = z.object({
+      category: z.enum(["Income", "Expense"]),
+      type: z.string().nonempty(),
+      date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      amount: z.preprocess((v) => Number(v), z.number().nonnegative()),
+      client: z.string().optional(),
+      item: z.string().optional(),
+      notes: z.string().optional(),
+    })
+
+    const result = schema.safeParse(form)
+    if (!result.success) {
+      alert("入力内容を確認してください")
+      return
+    }
+
     const payload = {
-      ...form,
-      amount: Number(form.amount),
+      ...result.data,
     }
     onAdd(payload)
     setOpen(false)
