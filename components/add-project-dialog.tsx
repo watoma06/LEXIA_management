@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -42,7 +43,21 @@ export function AddProjectDialog({ onAdd, className }: AddProjectDialogProps) {
   }
 
   const handleSubmit = () => {
-    onAdd({ ...form, unit_price: Number(form.unit_price) })
+    const schema = z.object({
+      project_name: z.string().nonempty(),
+      client_name: z.string().nonempty(),
+      status: z.string().nonempty(),
+      due_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      unit_price: z.preprocess((v) => Number(v), z.number().nonnegative()),
+    })
+
+    const result = schema.safeParse(form)
+    if (!result.success) {
+      alert("入力内容を確認してください")
+      return
+    }
+
+    onAdd(result.data)
     setOpen(false)
     setForm({
       project_name: "",
